@@ -1,5 +1,5 @@
 # Project settings
-BINARY_NAME=eventic
+PROJECT_NAME=eventic
 PKG=./...
 MAIN=main.go
 BUILD_DIR=build
@@ -7,8 +7,10 @@ BUILD_DIR=build
 # Git info
 BRANCH=$(shell git rev-parse --abbrev-ref HEAD)
 
+# Docker setting
+TEST_TAG=dev
+DOCKER_FILE_PATH=.
 
-# Default target
 run: ## Run the app
 	@clear
 	@go run $(MAIN)
@@ -16,10 +18,10 @@ run: ## Run the app
 all: build ## Build the project (default)
 
 compile: ## Compile (without installing)
-	@go build -o $(BUILD_DIR)/$(BINARY_NAME) $(MAIN)
+	@go build -o $(BUILD_DIR)/$(PROJECT_NAME) $(MAIN)
 
 build: clean compile
-	./$(BUILD_DIR)/$(BINARY_NAME)
+	./$(BUILD_DIR)/$(PROJECT_NAME)
 
 
 test: ## Run tests
@@ -37,6 +39,15 @@ swag: ## Generate Swagger docs (requires github.com/swaggo/swag)
 clean: ## Remove build artifacts
 	rm -rf $(BUILD_DIR)
 
+image: ## build an image from docker file
+	docker build -t $(PROJECT_NAME):$(TEST_TAG) $(DOCKER_FILE_PATH) 
+
+drun: ## make dokcer run the image
+	docker run --name $(PROJECT_NAME)_$(TEST_TAG) -p 8080:8080 -d $(PROJECT_NAME):$(TEST_TAG)
+
+dstop: ## delete and stop continer
+	docker stop $(PROJECT_NAME)_$(TEST_TAG)
+	docker rm $(PROJECT_NAME)_$(TEST_TAG)
 push: ## Push current branch to origin
 	git push origin $(BRANCH)
 
@@ -46,13 +57,6 @@ pull: ## Pull current branch from origin
 # lint: ## Lint the project (requires golangci-lint)
 # 	golangci-lint run ./...
 
-db: ## make db up
-	@echo "try to turn on database..."
-	@docker compose up -d    
-
-db_off: ## make db down
-	@echo "try to turn off database..."
-	@docker compose down                                  
 
 info: ## Show Current branch
 	@echo "Branch:   $(BRANCH)"
