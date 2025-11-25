@@ -43,7 +43,7 @@ image: ## build an image from docker file
 	docker build -t $(PROJECT_NAME):$(TEST_TAG) $(DOCKER_FILE_PATH) 
 
 drun: ## make dokcer run the image
-	docker run --name $(PROJECT_NAME)_$(TEST_TAG) -p 8080:8080 -d $(PROJECT_NAME):$(TEST_TAG)
+	docker run --name $(PROJECT_NAME)_$(TEST_TAG) --env-file .env -p 8080:8080 -d $(PROJECT_NAME):$(TEST_TAG)
 
 dstop: ## delete and stop continer
 	docker stop $(PROJECT_NAME)_$(TEST_TAG)
