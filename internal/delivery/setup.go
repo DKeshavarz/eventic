@@ -11,22 +11,24 @@ const (
 	INTERFACES_COUNT = 2
 )
 
-func Setup(webCfg *web.Config, telegramCfg *telegram.Config){
+func Start(webCfg *web.Config, telegramCfg *telegram.Config) error{
 	ch := make(chan any)
 
 	go func() {
 		err := web.Start(webCfg)
-		log.Println(err)
+		log.Println("web stpos -> ", err)
 		ch <- "Done"
 	}()
 
 	go func() {
 		err := telegram.Start(telegramCfg)
-		log.Println(err)
+		log.Println("telegram stops ->", err)
 		ch <- "Done"
 	}()
 
 	for range INTERFACES_COUNT{
 		<- ch 
 	}
+
+	return  nil
 }
