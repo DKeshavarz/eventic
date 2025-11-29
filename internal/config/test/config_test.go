@@ -5,18 +5,20 @@ import (
 	"os"
 	"testing"
 
+	"github.com/DKeshavarz/eventic/internal/config"
 	"github.com/DKeshavarz/eventic/internal/delivery/telegram"
 	"github.com/DKeshavarz/eventic/internal/delivery/web"
 	"github.com/joho/godotenv"
 )
 
 func TestConfigStructWithNoFile(t *testing.T) {
-	cfg := New()
+	
+	cfg := config.New()
 
 	if cfg.Telegram == nil || *cfg.Telegram != *(telegram.DefaultConfig()) {
 		t.Error("Expected telergarm config to be initialized but got", cfg.Telegram)
 	}
-	
+
 	if cfg.WebServer == nil || *(cfg.WebServer) != *(web.DefaultConfig()) {
 		t.Error("Expected web config to be initialized but got", cfg.WebServer)
 	}
@@ -24,7 +26,7 @@ func TestConfigStructWithNoFile(t *testing.T) {
 
 func TestWithFile(t *testing.T) {
 	fileContent := fmt.Sprintf("%s=%s  \n", "TELEGRAM_API_KEY", "myTelegramAPI") +
-				   fmt.Sprintf("%s=%s  \n", "WEB_PORT", "2000")
+		fmt.Sprintf("%s=%s  \n", "WEB_PORT", "2000")
 
 	const fileName = ".env.test"
 
@@ -43,7 +45,7 @@ func TestWithFile(t *testing.T) {
 	}
 
 	//*************************************************************//
-	cfg := New()
+	cfg := config.New()
 	if cfg.Telegram.APIKey != "myTelegramAPI" {
 		t.Errorf("Expected telergarm API to be `%s` but get: `%s`", "myTelegramAPI", cfg.Telegram.APIKey)
 	}
