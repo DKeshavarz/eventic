@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/DKeshavarz/eventic/internal/entity"
-	"github.com/DKeshavarz/eventic/internal/usecase"
+	"github.com/DKeshavarz/eventic/internal/usecase/guest"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
@@ -132,7 +132,11 @@ func strPtr(s string) *string {
 }
 
 func (u *userStorage) GetUserByPhone(phone string) (*entity.User, error) {
-
 	args := u.Called(phone)
+	return args.Get(0).(*entity.User), args.Error(1)
+}
+
+func (u *userStorage) GetUserByEmail(email string) (*entity.User, error) {
+	args := u.Called(email)
 	return args.Get(0).(*entity.User), args.Error(1)
 }

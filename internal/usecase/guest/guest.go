@@ -6,7 +6,20 @@ import (
 )
 
 func (g *guest) LoginWtihEmail(email, password string) (*entity.User, error) {
-	return nil, nil
+	if validation.ValidateEmail(email) != nil {
+		return nil, ErrInvalidEmail
+	}
+
+	user, err := g.userStorage.GetUserByEmail(email)
+	if err != nil {
+		return nil, err
+	}
+
+	if user.Password != password {
+		return nil, ErrInvalidPassword
+	}
+
+	return user, nil
 }
 
 func (g *guest) LoginWtihPhone(phone, password string) (*entity.User, error) {

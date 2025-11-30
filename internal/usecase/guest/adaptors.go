@@ -16,6 +16,7 @@ var (
 	ErrInvalidPhone    = errors.New("invalid phone number")
 	ErrUserNotFound    = errors.New("user not found")
 	ErrInvalidPassword = errors.New("invalid password")
+	ErrInvalidEmail    = errors.New("invalid email")
 )
 
 type guest struct {
