@@ -7,3 +7,6 @@ type User interface {
 	GetUserByEmail(email string) (*entity.User, error)
 }	
 
+type Organization interface {
+	Create(org *entity.Organization) (*entity.Organization, error)
+}
