@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/DKeshavarz/eventic/internal/entity"
-	usecase "github.com/DKeshavarz/eventic/internal/usecase/guest"
+	"github.com/DKeshavarz/eventic/internal/usecase/user"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -42,7 +42,7 @@ func TestLoginWithEmail(t *testing.T) {
 			setupMock: func(m *userStorage) {
 				m.On("GetUserByEmail", "danny").Return(nil, nil)
 			},
-			wantErr:  usecase.ErrInvalidEmail,
+			wantErr:  user.ErrInvalidEmail,
 			wantUser: nil,
 		},
 		{
@@ -56,7 +56,7 @@ func TestLoginWithEmail(t *testing.T) {
 					Password: "1111",
 				}, nil)
 			},
-			wantErr:  usecase.ErrInvalidPassword,
+			wantErr:  user.ErrInvalidPassword,
 			wantUser: nil,
 		},
 		{
@@ -65,10 +65,10 @@ func TestLoginWithEmail(t *testing.T) {
 			password: "1234",
 			setupMock: func(m *userStorage) {
 				m.On("GetUserByEmail", "danny@gmail.com").Return(&entity.User{},
-					usecase.ErrUserNotFound,
+					user.ErrUserNotFound,
 				)
 			},
-			wantErr:  usecase.ErrUserNotFound,
+			wantErr:  user.ErrUserNotFound,
 			wantUser: nil,
 		},
 	}
@@ -80,7 +80,7 @@ func TestLoginWithEmail(t *testing.T) {
 
 			tc.setupMock(userStorage)
 
-			guest := usecase.NewGuest(userStorage)
+			guest := user.NewGuest(userStorage)
 
 			user, err := guest.LoginWtihEmail(tc.email, tc.password)
 

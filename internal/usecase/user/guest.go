@@ -1,4 +1,4 @@
-package usecase
+package user
 
 import (
 	"github.com/DKeshavarz/eventic/internal/entity"

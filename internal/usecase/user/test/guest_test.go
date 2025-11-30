@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/DKeshavarz/eventic/internal/entity"
-	"github.com/DKeshavarz/eventic/internal/usecase/guest"
+	"github.com/DKeshavarz/eventic/internal/usecase/user"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
@@ -47,7 +47,7 @@ func TestLoginWithPhone(t *testing.T) {
 			setupMock: func(m *userStorage) {
 				m.On("GetUserByPhone").Return(nil, nil)
 			},
-			wantErr:  usecase.ErrInvalidPhone,
+			wantErr:  user.ErrInvalidPhone,
 			wantUser: nil,
 		},
 		{
@@ -57,7 +57,7 @@ func TestLoginWithPhone(t *testing.T) {
 			setupMock: func(m *userStorage) {
 				m.On("GetUserByPhone").Return(nil, nil)
 			},
-			wantErr:  usecase.ErrInvalidPhone,
+			wantErr:  user.ErrInvalidPhone,
 			wantUser: nil,
 		},
 		{
@@ -82,10 +82,10 @@ func TestLoginWithPhone(t *testing.T) {
 			name:     "user not found",
 			phone:    "09188119091",
 			setupMock: func(m *userStorage) {
-				m.On("GetUserByPhone", "09188119091").Return(&entity.User{}, usecase.ErrUserNotFound)
+				m.On("GetUserByPhone", "09188119091").Return(&entity.User{}, user.ErrUserNotFound)
 			},
 			password: "1111",
-			wantErr:  usecase.ErrUserNotFound,
+			wantErr:  user.ErrUserNotFound,
 			wantUser: nil,
 		},
 		{
@@ -99,7 +99,7 @@ func TestLoginWithPhone(t *testing.T) {
 				}, nil)
 			},
 			password: "1111",
-			wantErr:  usecase.ErrInvalidPassword,
+			wantErr:  user.ErrInvalidPassword,
 			wantUser: nil,
 		},
 	}
@@ -112,7 +112,7 @@ func TestLoginWithPhone(t *testing.T) {
 
 			tc.setupMock(userStorage)
 
-			guest := usecase.NewGuest(userStorage)
+			guest := user.NewGuest(userStorage)
 			
 			user, err := guest.LoginWtihPhone(tc.phone, tc.password)
 

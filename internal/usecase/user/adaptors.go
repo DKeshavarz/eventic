@@ -1,4 +1,4 @@
-package usecase
+package user
 
 import (
 	"errors"
@@ -7,7 +7,7 @@ import (
 	"github.com/DKeshavarz/eventic/internal/repositories"
 )
 
-type Guest interface {
+type User interface {
 	LoginWtihEmail(email, password string) (*entity.User, error)
 	LoginWtihPhone(phone, password string) (*entity.User, error)
 }
@@ -23,7 +23,7 @@ type guest struct {
 	userStorage repositories.User
 }
 
-func NewGuest(userStorage repositories.User) Guest {
+func NewGuest(userStorage repositories.User) User {
 	return &guest{
 		userStorage: userStorage,
 	}
