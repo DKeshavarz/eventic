@@ -37,6 +37,11 @@ func Test_ValidEmail(t *testing.T) {
 			email:   "test@g.mail.c",
 			wantErr: true,
 		},
+		{
+			name:    "email with invalid domain",
+			email:   "dann.y@gmail.com",
+			wantErr: true,
+		},
 	}
 
 	for _, tc := range testCases {
