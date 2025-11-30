@@ -1,6 +1,10 @@
 package entity
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/DKeshavarz/eventic/pkg/utiles"
+)
 
 func TestValidateOrganization(t *testing.T) {
 	testCases := []struct {
@@ -47,7 +51,7 @@ func TestValidateOrganization(t *testing.T) {
 				Name:        "name",
 				Description: "Somthing",
 				LogoPic:     nil,
-				Email:       strPtr("dankeshavarz@som"),
+				Email:       utiles.StrPtr("dankeshavarz@som"),
 				Phone:       nil,
 			},
 			expectedErr: ErrInvalidEmail,
@@ -57,9 +61,9 @@ func TestValidateOrganization(t *testing.T) {
 			org: &Organization{
 				Name:        "name",
 				Description: "Somthing",
-				LogoPic:     strPtr("./pic/"),
-				Email:       strPtr("dankeshavarz@som.com"),
-				Phone:       strPtr("0918 811 3791"),
+				LogoPic:     utiles.StrPtr("./pic/"),
+				Email:       utiles.StrPtr("dankeshavarz@som.com"),
+				Phone:       utiles.StrPtr("0918 811 3791"),
 			},
 			expectedErr: ErrInvalidPhone,
 		},
@@ -68,9 +72,9 @@ func TestValidateOrganization(t *testing.T) {
 			org: &Organization{
 				Name:        "name",
 				Description: "Somthing",
-				LogoPic:     strPtr("./pic/"),
-				Email:       strPtr("dankeshavarz@som.com"),
-				Phone:       strPtr("09188113791"),
+				LogoPic:     utiles.StrPtr("./pic/"),
+				Email:       utiles.StrPtr("dankeshavarz@som.com"),
+				Phone:       utiles.StrPtr("09188113791"),
 			},
 			expectedErr: nil,
 		},
@@ -87,7 +91,3 @@ func TestValidateOrganization(t *testing.T) {
 }
 
 
-// ------- helpers ----------------
-func strPtr(s string) *string {
-	return &s
-}
