@@ -46,7 +46,7 @@ func Test_ValidEmail(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			err := ValidateEmail(tc.email)
+			err := Email(tc.email)
 			if tc.wantErr {
 				assert.Error(t, err)
 			} else {
@@ -86,7 +86,7 @@ func Test_ValidPhone(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			err := ValidatePhone(tc.phone)
+			err := Phone(tc.phone)
 			if tc.wantErr {
 				assert.Error(t, err)
 			} else {

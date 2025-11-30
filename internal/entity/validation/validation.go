@@ -7,7 +7,7 @@ import (
 
 var emailRegex = regexp.MustCompile(`^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z]{2,}$`)
 
-func ValidateEmail(email string) error {
+func Email(email string) error {
     if !emailRegex.MatchString(email) {
         return errors.New("invalid email format")
     }
@@ -16,7 +16,7 @@ func ValidateEmail(email string) error {
 
 var phoneRegex = regexp.MustCompile(`^[0-9]+$`)
 
-func ValidatePhone(phone string) error {
+func Phone(phone string) error {
     if len(phone) != 11 {
         return errors.New("phone must be between 11 digits")
     }
