@@ -6,7 +6,7 @@ import (
 )
 
 func (s *service) LoginWtihEmail(email, password string) (*entity.User, error) {
-	if validation.ValidateEmail(email) != nil {
+	if validation.Email(email) != nil {
 		return nil, ErrInvalidEmail
 	}
 
@@ -23,7 +23,7 @@ func (s *service) LoginWtihEmail(email, password string) (*entity.User, error) {
 }
 
 func (s *service) LoginWtihPhone(phone, password string) (*entity.User, error) {
-	if validation.ValidatePhone(phone) != nil {
+	if validation.Phone(phone) != nil {
 		return nil, ErrInvalidPhone
 	}
 
