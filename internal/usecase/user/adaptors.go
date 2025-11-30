@@ -19,12 +19,12 @@ var (
 	ErrInvalidEmail    = errors.New("invalid email")
 )
 
-type guest struct {
+type service struct {
 	userStorage repositories.User
 }
 
 func NewGuest(userStorage repositories.User) User {
-	return &guest{
+	return &service{
 		userStorage: userStorage,
 	}
 }

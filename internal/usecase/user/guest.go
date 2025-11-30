@@ -5,12 +5,12 @@ import (
 	"github.com/DKeshavarz/eventic/internal/entity/validation"
 )
 
-func (g *guest) LoginWtihEmail(email, password string) (*entity.User, error) {
+func (s *service) LoginWtihEmail(email, password string) (*entity.User, error) {
 	if validation.ValidateEmail(email) != nil {
 		return nil, ErrInvalidEmail
 	}
 
-	user, err := g.userStorage.GetUserByEmail(email)
+	user, err := s.userStorage.GetUserByEmail(email)
 	if err != nil {
 		return nil, err
 	}
@@ -22,12 +22,12 @@ func (g *guest) LoginWtihEmail(email, password string) (*entity.User, error) {
 	return user, nil
 }
 
-func (g *guest) LoginWtihPhone(phone, password string) (*entity.User, error) {
+func (s *service) LoginWtihPhone(phone, password string) (*entity.User, error) {
 	if validation.ValidatePhone(phone) != nil {
 		return nil, ErrInvalidPhone
 	}
 
-	user, err := g.userStorage.GetUserByPhone(phone)
+	user, err := s.userStorage.GetUserByPhone(phone)
 	if err != nil {
 		return nil, err
 	}
