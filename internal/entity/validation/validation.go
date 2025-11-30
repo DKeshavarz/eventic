@@ -5,7 +5,7 @@ import (
     "regexp"
 )
 
-var emailRegex = regexp.MustCompile(`^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]{2,}$`)
+var emailRegex = regexp.MustCompile(`^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z]{2,}$`)
 
 func ValidateEmail(email string) error {
     if !emailRegex.MatchString(email) {
