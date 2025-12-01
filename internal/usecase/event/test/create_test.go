@@ -82,8 +82,9 @@ func TestCreateEvent(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			eventStorage := &eventStorage{}
+			joinEventStorage := new(joinEventStorage)
 			tc.setupMock(eventStorage)
-			service := event.NewService(eventStorage)
+			service := event.NewService(eventStorage, joinEventStorage)
 			event, err := service.Create(tc.event)
 
 			if tc.wantErr != nil {

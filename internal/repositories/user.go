@@ -14,3 +14,7 @@ type Organization interface {
 type Event interface {
 	Create(event *entity.Event)(*entity.Event, error)
 }
+
+type JoinEvent interface {
+	Create(event *entity.JoinEvent)(*entity.JoinEvent, error)
+}

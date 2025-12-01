@@ -14,3 +14,7 @@ func (s *service) Create(event *entity.Event) (*entity.Event, error) {
 	}
 	return newEvent, nil
 }
+
+func (s *service) Join(joinEvent *entity.JoinEvent) (*entity.JoinEvent, error){
+	return s.joinEventStorage.Create(joinEvent)
+}
