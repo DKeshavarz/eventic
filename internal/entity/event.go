@@ -1,6 +1,9 @@
 package entity
 
-import "time"
+import (
+	"errors"
+	"time"
+)
 
 type Event struct {
 	ID          int       `json:"id"`
@@ -12,6 +15,29 @@ type Event struct {
 	Location    *string   `json:"location"`
 	PosterPic   *string   `json:"poster_pic"`
 	Link        *string   `json:"link"`
+}
+
+var (
+	ErrInvalidTitle       = errors.New("invalid title")
+	ErrInvalidCost        = errors.New("invalid cost")
+	ErrInvalidDateTime    = errors.New("invalid datetime")
+	//ErrInvalidDescription = errors.New("invalid description")
+)
+
+func (e *Event) Validate() error {
+	if len(e.Title) == 0 {
+		return ErrInvalidTitle
+	}
+
+	if e.Cost < 0 {
+		return ErrInvalidCost
+	}
+
+	if len(e.Description) == 0 {
+		return ErrInvalidDescription
+	}
+
+	return nil
 }
 
 type JoinEvent struct {
