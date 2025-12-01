@@ -114,7 +114,7 @@ func TestLoginWithPhone(t *testing.T) {
 
 			guest := user.NewGuest(userStorage)
 			
-			user, err := guest.LoginWtihPhone(tc.phone, tc.password)
+			user, err := guest.LoginWithPhone(tc.phone, tc.password)
 
 			if tc.wantErr != nil {
 				assert.Equal(t, tc.wantErr, err)

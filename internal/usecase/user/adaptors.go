@@ -8,8 +8,8 @@ import (
 )
 
 type Service interface {
-	LoginWtihEmail(email, password string) (*entity.User, error)
-	LoginWtihPhone(phone, password string) (*entity.User, error)
+	LoginWithEmail(email, password string) (*entity.User, error)
+	LoginWithPhone(phone, password string) (*entity.User, error)
 }
 
 var (

@@ -82,7 +82,7 @@ func TestLoginWithEmail(t *testing.T) {
 
 			guest := user.NewGuest(userStorage)
 
-			user, err := guest.LoginWtihEmail(tc.email, tc.password)
+			user, err := guest.LoginWithEmail(tc.email, tc.password)
 
 			if tc.wantErr != nil {
 				assert.Equal(t, tc.wantErr, err)
