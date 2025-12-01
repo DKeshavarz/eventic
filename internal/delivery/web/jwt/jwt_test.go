@@ -9,46 +9,82 @@ import (
 )
 
 func TestGenerateJWT(t *testing.T) {
+    jwtService := NewSevice(&Config{
+        Duration: time.Hour,
+        Secret: []byte("Meow"),
+    })
     user := &entity.User{ID: 123}
-    duration := time.Hour
 
-    token, err := Generate(user, duration)
+
+    token, err := jwtService.Generate(user)
     assert.NoError(t, err)
     assert.NotEmpty(t, token)
 }
 
 func TestValidateJWT(t *testing.T) {
+    jwtService := NewSevice(&Config{
+        Duration: time.Hour,
+        Secret: []byte("Meow"),
+    })
     user := &entity.User{ID: 123}
-    duration := time.Hour
 
     // Generate a token
-    token, err := Generate(user, duration)
+    token, err := jwtService.Generate(user)
     assert.NoError(t, err)
 
     // Validate the token
-    claims, err := Validate(token)
+    claims, err := jwtService.Validate(token)
     assert.NoError(t, err)
     assert.Equal(t, user.ID, claims.UserID)
 }
 
 func TestValidateJWT_InvalidToken(t *testing.T) {
-    // Test with an invalid token
+    jwtService := NewSevice(&Config{
+        Duration: time.Hour,
+        Secret: []byte("Meow"),
+    })
+
     invalidToken := "invalid.token.string"
-    claims, err := Validate(invalidToken)
+    claims, err := jwtService.Validate(invalidToken)
     assert.Error(t, err)
     assert.Nil(t, claims)
 }
 
 func TestValidateJWT_ExpiredToken(t *testing.T) {
+    jwtService := NewSevice(&Config{
+        Duration: -time.Hour,
+        Secret: []byte("Meow"),
+    })
     user := &entity.User{ID: 123}
-    duration := -time.Hour // Token already expired
 
-    // Generate an expired token
-    token, err := Generate(user, duration)
+    token, err := jwtService.Generate(user)
     assert.NoError(t, err)
 
-    // Validate the expired token
-    claims, err := Validate(token)
+    claims, err := jwtService.Validate(token)
     assert.Error(t, err)
     assert.Nil(t, claims)
+}
+
+func TestInvalidSignature(t *testing.T) {
+    jwtService1 := NewSevice(&Config{
+        Duration: time.Hour,
+        Secret: []byte("Meow"),
+    })
+    jwtService2 := NewSevice(&Config{
+        Duration: time.Hour,
+        Secret: []byte("Meowwww"),
+    })
+    user := &entity.User{ID: 123}
+
+    token, err := jwtService1.Generate(user)
+    assert.NoError(t, err)
+
+
+    claims, err := jwtService2.Validate(token)
+    assert.Error(t, err)
+    assert.Nil(t, claims)
+
+    claims, err = jwtService1.Validate(token)
+    assert.NoError(t, err)
+    assert.NotNil(t, claims)
 }

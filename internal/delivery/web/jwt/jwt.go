@@ -8,33 +8,52 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-var jwtSecret = []byte("I just want you to know that i love you")
+type Service interface {
+	Generate(user *entity.User) (string, error)
+	Validate(tokenString string) (*Claims, error)
+}
+
+type Config struct {
+	Duration time.Duration
+	Secret   []byte
+}
+type service struct {
+	duration time.Duration
+	secret   []byte
+}
+
+func NewSevice(cfg *Config) Service{
+	return &service{
+		duration: cfg.Duration,
+		secret: cfg.Secret,
+	}
+}
 
 type Claims struct {
 	UserID int `json:"userid"`
 	jwt.RegisteredClaims
 }
 
-func Generate(user *entity.User, duration time.Duration) (string, error) {
+func (s *service)Generate(user *entity.User) (string, error) {
 	claims := &Claims{
 		UserID: user.ID,
 		RegisteredClaims: jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(duration)),
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(s.duration)),
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
 		},
 	}
 
 	jwtToken := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return jwtToken.SignedString(jwtSecret)
+	return jwtToken.SignedString(s.secret)
 }
 
-func Validate(tokenString string) (*Claims, error) {
+func (s *service)Validate(tokenString string) (*Claims, error) {
 
 	token, err := jwt.ParseWithClaims(tokenString, &Claims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, errors.New("unexpected signing method")
 		}
-		return jwtSecret, nil
+		return s.secret, nil
 	})
 	if err != nil {
 		return nil, err
