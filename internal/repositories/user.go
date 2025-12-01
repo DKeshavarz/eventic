@@ -10,3 +10,7 @@ type User interface {
 type Organization interface {
 	Create(org *entity.Organization) (*entity.Organization, error)
 }
+
+type Event interface {
+	Create(event *entity.Event)(*entity.Event, error)
+}
