@@ -8,8 +8,8 @@ import (
 
 type Handler struct {
 	UserService         user.Service
-	tokenSevice         jwt.Service
-	refreshTokenService jwt.Service
+	TokenSevice         jwt.Service
+	RefreshTokenService jwt.Service
 }
 
 func NewHandler() *Handler {

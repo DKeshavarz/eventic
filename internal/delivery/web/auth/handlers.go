@@ -35,12 +35,12 @@ func (h *Handler) LoginWithEmail(c *gin.Context) {
 	}
 
 	// generate token for this user
-	token, err := h.tokenSevice.Generate(user)
+	token, err := h.TokenSevice.Generate(user)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, ErrorResponse{Error: "could not generate token"})
 		return
 	}
-	refreshToken, err := h.refreshTokenService.Generate(user)
+	refreshToken, err := h.RefreshTokenService.Generate(user)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, ErrorResponse{Error: "could not generate token"})
 		return
