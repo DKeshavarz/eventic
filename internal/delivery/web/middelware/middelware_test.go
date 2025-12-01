@@ -15,12 +15,19 @@ import (
 
 func TestAuthMiddleware(t *testing.T) {
 	gin.SetMode(gin.TestMode)
-
-	validToken, err := jwt.Generate(&entity.User{ID: 5}, time.Hour)
+	jwtService := jwt.NewSevice(&jwt.Config{
+		Duration: time.Hour,
+		Secret: []byte("moew"),
+	})
+	otherJwtService := jwt.NewSevice(&jwt.Config{
+		Duration: time.Hour,
+		Secret: []byte("moewww"),
+	})
+	validToken, err := jwtService.Generate(&entity.User{ID: 5})
 	if err != nil {
 		t.Fail()
 	}
-	invalidToken, err := jwt.Generate(&entity.User{ID: 5}, -time.Hour)
+	invalidToken, err := otherJwtService.Generate(&entity.User{ID: 5})
 	if err != nil {
 		t.Fail()
 	}
@@ -67,7 +74,7 @@ func TestAuthMiddleware(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 
 			r := gin.New()
-			r.Use(Auth())
+			r.Use(Auth(jwtService))
 			r.GET("/test", func(c *gin.Context) {
 				c.JSON(http.StatusOK, gin.H{"message": "success"})
 			})
