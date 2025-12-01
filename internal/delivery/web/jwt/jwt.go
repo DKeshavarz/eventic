@@ -15,7 +15,7 @@ type Claims struct {
 	jwt.RegisteredClaims
 }
 
-func GenerateJWT(user *entity.User, duration time.Duration) (string, error) {
+func Generate(user *entity.User, duration time.Duration) (string, error) {
 	claims := &Claims{
 		UserID: user.ID,
 		RegisteredClaims: jwt.RegisteredClaims{
@@ -28,7 +28,7 @@ func GenerateJWT(user *entity.User, duration time.Duration) (string, error) {
 	return jwtToken.SignedString(jwtSecret)
 }
 
-func ValidateJWT(tokenString string) (*Claims, error) {
+func Validate(tokenString string) (*Claims, error) {
 
 	token, err := jwt.ParseWithClaims(tokenString, &Claims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
