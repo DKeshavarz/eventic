@@ -28,7 +28,7 @@ func (h *Handler) LoginWithEmail(c *gin.Context) {
 	}
 
 	// login with user
-	user, err := h.UserService.LoginWtihEmail(req.Email, req.Password)
+	user, err := h.UserService.LoginWithEmail(req.Email, req.Password)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, ErrorResponse{Error: err.Error()})
 		return
