@@ -7,7 +7,7 @@ import (
 	"github.com/DKeshavarz/eventic/internal/repositories"
 )
 
-type User interface {
+type Service interface {
 	LoginWtihEmail(email, password string) (*entity.User, error)
 	LoginWtihPhone(phone, password string) (*entity.User, error)
 }
@@ -23,7 +23,7 @@ type service struct {
 	userStorage repositories.User
 }
 
-func NewGuest(userStorage repositories.User) User {
+func NewGuest(userStorage repositories.User) Service {
 	return &service{
 		userStorage: userStorage,
 	}
