@@ -98,7 +98,12 @@ func TestCreateEvent(t *testing.T) {
 
 
 // -------------- helpers ----------------------
-func (e *eventStorage) Create(org *entity.Event) (*entity.Event, error) {
-	args := e.Called(org)
+func (e *eventStorage) Create(event *entity.Event) (*entity.Event, error) {
+	args := e.Called(event)
+	return args.Get(0).(*entity.Event), args.Error(1)
+}
+
+func (e *eventStorage) GetByID(id int) (*entity.Event, error) {
+	args := e.Called(id)
 	return args.Get(0).(*entity.Event), args.Error(1)
 }

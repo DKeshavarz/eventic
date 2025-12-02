@@ -8,6 +8,7 @@ import (
 
 var (
 	ErrUserNotFound = errors.New("کاربر پیدا نشد")
+	ErrEventNotFound = errors.New("رویداد پیدا نشد")
 )
 
 type User interface {
@@ -21,6 +22,7 @@ type Organization interface {
 }
 
 type Event interface {
+	GetByID(id int) (*entity.Event, error)
 	Create(event *entity.Event) (*entity.Event, error)
 }
 
