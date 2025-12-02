@@ -9,6 +9,7 @@ import (
 var (
 	ErrUserNotFound = errors.New("کاربر پیدا نشد")
 	ErrEventNotFound = errors.New("رویداد پیدا نشد")
+	ErrOrgNotFound = errors.New("سازمان مورد نظر یافت نشد")
 )
 
 type User interface {

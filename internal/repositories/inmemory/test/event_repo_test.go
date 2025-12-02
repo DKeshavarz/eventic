@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestGetByID(t *testing.T) {
+func TestEventGetByID(t *testing.T) {
 	db := inmemory.NewDB()
 	eventStorage := inmemory.NewEventStorage(db)
 
