@@ -29,6 +29,6 @@ type Event interface {
 }
 
 type JoinEvent interface {
-	GetByID(id int) (*entity.JoinEvent, error)
+	GetByUserID(id int) ([]*entity.JoinEvent, error)
 	Create(event *entity.JoinEvent) (*entity.JoinEvent, error)
 }
