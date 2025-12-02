@@ -16,6 +16,9 @@ func NewUserStorage(db *DB) repositories.User {
 }
 
 func (u *UserStorage) GetUserByPhone(phone string) (*entity.User, error) {
+	u.db.mu.RLock()
+	defer u.db.mu.RUnlock()
+
 	for _, val := range u.db.users {
 		if val.Phone != nil && phone == *val.Phone {
 			return val, nil
@@ -26,6 +29,9 @@ func (u *UserStorage) GetUserByPhone(phone string) (*entity.User, error) {
 
 }
 func (u *UserStorage) GetUserByEmail(email string) (*entity.User, error) {
+	u.db.mu.RLock()
+	defer u.db.mu.RUnlock()
+
 	for _, val := range u.db.users {
 		if val.Email != nil && *(val.Email) == email {
 			return val, nil
@@ -36,6 +42,9 @@ func (u *UserStorage) GetUserByEmail(email string) (*entity.User, error) {
 
 }
 func (u *UserStorage) Create(user *entity.User) (*entity.User, error) {
+	u.db.mu.Lock()
+	defer u.db.mu.Unlock()
+
 	user.ID = u.db.userCounter
 	u.db.users[u.db.userCounter] = user
 	u.db.userCounter++
