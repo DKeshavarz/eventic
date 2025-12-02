@@ -19,5 +19,5 @@ func main() {
 
 	userSevice := user.NewSevice(userStorage)
 
-	delivery.Start(cfg.WebServer, cfg.Telegram, userSevice)
+	delivery.Start(cfg.Delivery, userSevice)
 }

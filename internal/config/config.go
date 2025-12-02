@@ -1,29 +1,30 @@
 package config
 
 import (
-	"fmt"
 	"time"
 
+	"github.com/DKeshavarz/eventic/internal/delivery"
 	"github.com/DKeshavarz/eventic/internal/delivery/telegram"
 	"github.com/DKeshavarz/eventic/internal/delivery/web"
 )
 
 type Config struct {
-	Telegram  *telegram.Config
-	WebServer *web.Config
+	Delivery *delivery.Config
 }
 
 func New() *Config {
 	Load(".env")
-	config := &Config{
-		Telegram:  telegram.DefaultConfig(),
-		WebServer: web.DefaultConfig(),
+	cfg := &Config{
+		Delivery: &delivery.Config{
+			TelegramCofig: telegram.DefaultConfig(),
+			WebConfig:     web.DefaultConfig(),
+		},
 	}
 
-	loadTelegram(config.Telegram)
-	LoadWebServer(config.WebServer)
-	fmt.Println(config)
-	return config
+	loadTelegram(cfg.Delivery.TelegramCofig)
+	LoadWebServer(cfg.Delivery.WebConfig)
+
+	return cfg
 }
 
 func loadTelegram(cfg *telegram.Config) {
