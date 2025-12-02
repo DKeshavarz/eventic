@@ -23,7 +23,7 @@ type service struct {
 	userStorage repositories.User
 }
 
-func NewGuest(userStorage repositories.User) Service {
+func NewSevice(userStorage repositories.User) Service {
 	return &service{
 		userStorage: userStorage,
 	}

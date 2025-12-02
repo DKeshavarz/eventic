@@ -12,8 +12,12 @@ type Handler struct {
 	RefreshTokenService jwt.Service
 }
 
-func NewHandler() *Handler {
-	return &Handler{}
+func NewHandler(UserService user.Service, TokenSevice jwt.Service, RefreshTokenService jwt.Service) *Handler {
+	return &Handler{
+		UserService:         UserService,
+		TokenSevice:         TokenSevice,
+		RefreshTokenService: RefreshTokenService,
+	}
 }
 
 func RegisterRoutes(group *gin.RouterGroup, h *Handler) {

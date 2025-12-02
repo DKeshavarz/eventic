@@ -112,7 +112,7 @@ func TestLoginWithPhone(t *testing.T) {
 
 			tc.setupMock(userStorage)
 
-			guest := user.NewGuest(userStorage)
+			guest := user.NewSevice(userStorage)
 			
 			user, err := guest.LoginWithPhone(tc.phone, tc.password)
 

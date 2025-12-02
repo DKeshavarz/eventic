@@ -80,7 +80,7 @@ func TestLoginWithEmail(t *testing.T) {
 
 			tc.setupMock(userStorage)
 
-			guest := user.NewGuest(userStorage)
+			guest := user.NewSevice(userStorage)
 
 			user, err := guest.LoginWithEmail(tc.email, tc.password)
 
