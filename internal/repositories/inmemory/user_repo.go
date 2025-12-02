@@ -1,0 +1,43 @@
+package inmemory
+
+import (
+	"github.com/DKeshavarz/eventic/internal/entity"
+	"github.com/DKeshavarz/eventic/internal/repositories"
+)
+
+type UserStorage struct {
+	db *DB
+}
+
+func NewUserStorage(db *DB) repositories.User {
+	return &UserStorage{
+		db: db,
+	}
+}
+
+func (u *UserStorage) GetUserByPhone(phone string) (*entity.User, error) {
+	for _, val := range u.db.users {
+		if val.Phone != nil && phone == *val.Phone {
+			return val, nil
+		}
+	}
+
+	return nil, repositories.ErrUserNotFound
+
+}
+func (u *UserStorage) GetUserByEmail(email string) (*entity.User, error) {
+	for _, val := range u.db.users {
+		if val.Email != nil && *(val.Email) == email {
+			return val, nil
+		}
+	}
+
+	return nil, repositories.ErrUserNotFound
+
+}
+func (u *UserStorage) Create(user *entity.User) (*entity.User, error) {
+	user.ID = u.db.userCounter
+	u.db.users[u.db.userCounter] = user
+	u.db.userCounter++
+	return user, nil
+}

@@ -140,3 +140,8 @@ func (u *userStorage) GetUserByEmail(email string) (*entity.User, error) {
 	args := u.Called(email)
 	return args.Get(0).(*entity.User), args.Error(1)
 }
+
+func (u *userStorage) Create(user *entity.User) (*entity.User, error) {
+	args := u.Called(user)
+	return args.Get(0).(*entity.User), args.Error(1)
+}

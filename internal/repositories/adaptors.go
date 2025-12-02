@@ -1,20 +1,29 @@
 package repositories
 
-import "github.com/DKeshavarz/eventic/internal/entity"
+import (
+	"errors"
+
+	"github.com/DKeshavarz/eventic/internal/entity"
+)
+
+var (
+	ErrUserNotFound = errors.New("کاربر پیدا نشد")
+)
 
 type User interface {
+	Create(user *entity.User) (*entity.User, error)
 	GetUserByPhone(phone string) (*entity.User, error)
 	GetUserByEmail(email string) (*entity.User, error)
-}	
+}
 
 type Organization interface {
 	Create(org *entity.Organization) (*entity.Organization, error)
 }
 
 type Event interface {
-	Create(event *entity.Event)(*entity.Event, error)
+	Create(event *entity.Event) (*entity.Event, error)
 }
 
 type JoinEvent interface {
-	Create(event *entity.JoinEvent)(*entity.JoinEvent, error)
+	Create(event *entity.JoinEvent) (*entity.JoinEvent, error)
 }
