@@ -18,6 +18,7 @@ type User interface {
 }
 
 type Organization interface {
+	GetByID(id int) (*entity.Organization, error)
 	Create(org *entity.Organization) (*entity.Organization, error)
 }
 
@@ -27,5 +28,6 @@ type Event interface {
 }
 
 type JoinEvent interface {
+	GetByID(id int) (*entity.JoinEvent, error)
 	Create(event *entity.JoinEvent) (*entity.JoinEvent, error)
 }

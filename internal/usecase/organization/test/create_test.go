@@ -127,3 +127,8 @@ func (m *organizationStorage) Create(org *entity.Organization) (*entity.Organiza
 	args := m.Called(org)
 	return args.Get(0).(*entity.Organization), args.Error(1)
 }
+
+func (m *organizationStorage) GetByID(id int) (*entity.Organization, error) {
+	args := m.Called(id)
+	return args.Get(0).(*entity.Organization), args.Error(1)
+}
