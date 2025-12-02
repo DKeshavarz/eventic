@@ -4,17 +4,18 @@ import (
 	"net/http"
 	"time"
 
+	_ "github.com/DKeshavarz/eventic/docs"
 	"github.com/DKeshavarz/eventic/internal/delivery/web/auth"
 	"github.com/DKeshavarz/eventic/internal/delivery/web/jwt"
 	"github.com/DKeshavarz/eventic/internal/usecase/user"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 // @title                      Eventic
+// @version                    0.1.0
 // @description                A platform to hold and participate in events
 // @termsOfService             http://swagger.io/terms/
 // @contact.name               Eventic Dev Team
@@ -34,20 +35,20 @@ func Start(cfg *Config, userService user.Service) error {
 	swaggerHandler := ginSwagger.WrapHandler(swaggerFiles.Handler,
 		ginSwagger.DocExpansion("none"),
 	)
-	
-	server.GET("/swagger/*any", swaggerHandler)
+
 	server.Use(cors.New(corsConfig))
+	server.GET("/swagger/*any", swaggerHandler)
 	server.GET("/health", health)
 
 	token := jwt.NewSevice(&jwt.Config{
 		Duration: time.Minute * 30,
-		Secret: []byte("meowwww"),
+		Secret:   []byte("meowwww"),
 	})
 	refreshToken := jwt.NewSevice(&jwt.Config{
 		Duration: time.Hour * 5,
-		Secret: []byte("meowwwwww"),
+		Secret:   []byte("meowwwwww"),
 	})
-	
+
 	authHandler := auth.NewHandler(userService, token, refreshToken)
 	auth.RegisterRoutes(server.Group(""), authHandler)
 	return server.Run(":" + cfg.Port)

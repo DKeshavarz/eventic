@@ -7,7 +7,8 @@
         "contact": {
             "name": "Eventic Dev Team",
             "url": "https://github.com/DKeshavarz/eventic"
-        }
+        },
+        "version": "0.1.0"
     },
     "paths": {
         "/login-email": {

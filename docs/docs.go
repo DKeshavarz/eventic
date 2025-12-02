@@ -110,7 +110,7 @@ const docTemplate = `{
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "",
+	Version:          "0.1.0",
 	Host:             "",
 	BasePath:         "",
 	Schemes:          []string{},
@@ -118,8 +118,6 @@ var SwaggerInfo = &swag.Spec{
 	Description:      "A platform to hold and participate in events",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
-	LeftDelim:        "{{",
-	RightDelim:       "}}",
 }
 
 func init() {
