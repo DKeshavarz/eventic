@@ -5,7 +5,7 @@ import (
 
 	"github.com/DKeshavarz/eventic/internal/entity"
 	"github.com/DKeshavarz/eventic/internal/usecase/organization"
-	"github.com/DKeshavarz/eventic/pkg/utiles"
+	"github.com/DKeshavarz/eventic/pkg/utile"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
@@ -64,7 +64,7 @@ func TestCreateOrg(t *testing.T) {
 				OwnerID:     5,
 				Name:        "test",
 				Description: "somthing",
-				Email:       utiles.StrPtr("somebadmal+e@sss.com"),
+				Email:       utile.StrPtr("somebadmal+e@sss.com"),
 			},
 			setupMock: func(m *organizationStorage) {
 				m.On("Create", mock.Anything).Return(&entity.Organization{}, nil)
@@ -78,7 +78,7 @@ func TestCreateOrg(t *testing.T) {
 				OwnerID:     10,
 				Name:        "test name",
 				Description: "somthing",
-				Email:       utiles.StrPtr("danny@sss.com"),
+				Email:       utile.StrPtr("danny@sss.com"),
 			},
 			setupMock: func(m *organizationStorage) {
 				m.On("Create", mock.Anything).Return(&entity.Organization{}, organization.ErrInvalidOwner)
@@ -92,7 +92,7 @@ func TestCreateOrg(t *testing.T) {
 				OwnerID:     10,
 				Name:        "test name",
 				Description: "somthing",
-				Email:       utiles.StrPtr("danny@sss.com"),
+				Email:       utile.StrPtr("danny@sss.com"),
 			},
 			setupMock: func(m *organizationStorage) {
 				m.On("Create", mock.Anything).Return(&entity.Organization{}, organization.ErrDuplicatedName)

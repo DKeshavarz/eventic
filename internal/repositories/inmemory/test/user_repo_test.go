@@ -6,7 +6,7 @@ import (
 	"github.com/DKeshavarz/eventic/internal/entity"
 	"github.com/DKeshavarz/eventic/internal/repositories"
 	"github.com/DKeshavarz/eventic/internal/repositories/inmemory"
-	"github.com/DKeshavarz/eventic/pkg/utiles"
+	"github.com/DKeshavarz/eventic/pkg/utile"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -17,7 +17,7 @@ func TestCreate(t *testing.T) {
 	user1 := &entity.User{
 		Username: "ali",
 		Password: "1234",
-		Email:    utiles.StrPtr("ali@example.com"),
+		Email:    utile.StrPtr("ali@example.com"),
 	}
 	newUser1, err := userStore.Create(user1)
 
@@ -28,7 +28,7 @@ func TestCreate(t *testing.T) {
 	user2 := &entity.User{
 		Username: "reza",
 		Password: "1234",
-		Phone:    utiles.StrPtr("09398116589"),
+		Phone:    utile.StrPtr("09398116589"),
 	}
 	newUser2, err := userStore.Create(user2)
 
@@ -44,7 +44,7 @@ func TestCreateAndGetByEmail(t *testing.T) {
 	user1 := &entity.User{
 		Username: "ali",
 		Password: "1234",
-		Email:    utiles.StrPtr("ali@example.com"),
+		Email:    utile.StrPtr("ali@example.com"),
 	}
 	newUser1, err := userStore.Create(user1)
 
@@ -63,7 +63,7 @@ func TestCreateAndGetByPhone(t *testing.T) {
 	user := &entity.User{
 		Username: "ali",
 		Password: "1234",
-		Phone:    utiles.StrPtr("09398116589"),
+		Phone:    utile.StrPtr("09398116589"),
 	}
 	newUser, err := userStore.Create(user)
 

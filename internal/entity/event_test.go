@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/DKeshavarz/eventic/pkg/utiles"
+	"github.com/DKeshavarz/eventic/pkg/utile"
 )
 
 func TestValidateEvent(t *testing.T) {
@@ -82,9 +82,9 @@ func TestValidateEvent(t *testing.T) {
 				Cost:        200,
 				DateTime:    time.Now(),
 				Description: "This is a complete event",
-				Location:    utiles.StrPtr("123 Main St"),
-				PosterPic:   utiles.StrPtr("/images/poster.jpg"),
-				Link:        utiles.StrPtr("https://example.com/event"),
+				Location:    utile.StrPtr("123 Main St"),
+				PosterPic:   utile.StrPtr("/images/poster.jpg"),
+				Link:        utile.StrPtr("https://example.com/event"),
 			},
 			expectedErr: nil,
 		},

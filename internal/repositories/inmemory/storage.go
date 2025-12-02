@@ -4,7 +4,7 @@ import (
 	"sync"
 
 	"github.com/DKeshavarz/eventic/internal/entity"
-	"github.com/DKeshavarz/eventic/pkg/utiles"
+	"github.com/DKeshavarz/eventic/pkg/utile"
 )
 
 type DB struct {
@@ -37,7 +37,7 @@ func DefaultDB() *DB {
 			ID:       1,
 			Username: "Danny",
 			Password: "1234",
-			Email:    utiles.StrPtr("dankeshavarz1075@gmail.com"),
+			Email:    utile.StrPtr("dankeshavarz1075@gmail.com"),
 		},
 	}
 	organizations := make(map[int]*entity.Organization)

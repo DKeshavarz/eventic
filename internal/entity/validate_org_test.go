@@ -3,7 +3,7 @@ package entity
 import (
 	"testing"
 
-	"github.com/DKeshavarz/eventic/pkg/utiles"
+	"github.com/DKeshavarz/eventic/pkg/utile"
 )
 
 func TestValidateOrganization(t *testing.T) {
@@ -51,7 +51,7 @@ func TestValidateOrganization(t *testing.T) {
 				Name:        "name",
 				Description: "Somthing",
 				LogoPic:     nil,
-				Email:       utiles.StrPtr("dankeshavarz@som"),
+				Email:       utile.StrPtr("dankeshavarz@som"),
 				Phone:       nil,
 			},
 			expectedErr: ErrInvalidEmail,
@@ -61,9 +61,9 @@ func TestValidateOrganization(t *testing.T) {
 			org: &Organization{
 				Name:        "name",
 				Description: "Somthing",
-				LogoPic:     utiles.StrPtr("./pic/"),
-				Email:       utiles.StrPtr("dankeshavarz@som.com"),
-				Phone:       utiles.StrPtr("0918 811 3791"),
+				LogoPic:     utile.StrPtr("./pic/"),
+				Email:       utile.StrPtr("dankeshavarz@som.com"),
+				Phone:       utile.StrPtr("0918 811 3791"),
 			},
 			expectedErr: ErrInvalidPhone,
 		},
@@ -72,9 +72,9 @@ func TestValidateOrganization(t *testing.T) {
 			org: &Organization{
 				Name:        "name",
 				Description: "Somthing",
-				LogoPic:     utiles.StrPtr("./pic/"),
-				Email:       utiles.StrPtr("dankeshavarz@som.com"),
-				Phone:       utiles.StrPtr("09188113791"),
+				LogoPic:     utile.StrPtr("./pic/"),
+				Email:       utile.StrPtr("dankeshavarz@som.com"),
+				Phone:       utile.StrPtr("09188113791"),
 			},
 			expectedErr: nil,
 		},

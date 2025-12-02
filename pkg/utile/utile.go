@@ -1,4 +1,4 @@
-package utiles
+package utile
 
 
 func StrPtr(s string) *string {

@@ -11,7 +11,7 @@ import (
 	"github.com/DKeshavarz/eventic/internal/delivery/web/auth"
 	"github.com/DKeshavarz/eventic/internal/delivery/web/jwt"
 	"github.com/DKeshavarz/eventic/internal/entity"
-	"github.com/DKeshavarz/eventic/pkg/utiles"
+	"github.com/DKeshavarz/eventic/pkg/utile"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -66,7 +66,7 @@ func TestHandler_LoginWithEmail(t *testing.T) {
 			name: " valid login",
 			body: `{"email":"john@example.com","password":"correct123"}`,
 			setupMocks: func(u *MockUserService, t, r *MockJWTService) {
-				user := &entity.User{ID: 42, Email: utiles.StrPtr("john@example.com")}
+				user := &entity.User{ID: 42, Email: utile.StrPtr("john@example.com")}
 				u.On("LoginWithEmail", "john@example.com", "correct123").Return(user, nil)
 				t.On("Generate", user).Return("fake.jwt.access.token", nil)
 				r.On("Generate", user).Return("fake.jwt.refresh.token", nil)
