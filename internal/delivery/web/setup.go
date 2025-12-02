@@ -9,8 +9,20 @@ import (
 	"github.com/DKeshavarz/eventic/internal/usecase/user"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
+// @title                      Eventic
+// @description                A platform to hold and participate in events
+// @termsOfService             http://swagger.io/terms/
+// @contact.name               Eventic Dev Team
+// @contact.url                https://github.com/DKeshavarz/eventic
+// @securityDefinitions.apikey BearerAuth
+// @in                         header
+// @name                       Authorization
+// @description                Type `Bearer ` followed by your JWT token. example: "Bearer abcde12345"
 func Start(cfg *Config, userService user.Service) error {
 	server := gin.Default()
 
@@ -19,7 +31,11 @@ func Start(cfg *Config, userService user.Service) error {
 		AllowMethods: []string{"GET", "POST", "PUT", "DELETE"},
 		AllowHeaders: []string{"Origin", "Content-Type", "Accept", "Authorization"},
 	}
-
+	swaggerHandler := ginSwagger.WrapHandler(swaggerFiles.Handler,
+		ginSwagger.DocExpansion("none"),
+	)
+	
+	server.GET("/swagger/*any", swaggerHandler)
 	server.Use(cors.New(corsConfig))
 	server.GET("/health", health)
 
