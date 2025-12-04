@@ -39,7 +39,7 @@ info:
   description: A platform to hold and participate in events
   termsOfService: http://swagger.io/terms/
   title: Eventic
-  version: 0.1.0
+  version: 0.3.0
 paths:
   /login-email:
     post:

@@ -15,7 +15,7 @@ import (
 )
 
 // @title                      Eventic
-// @version                    0.1.0
+// @version                    0.3.0
 // @description                A platform to hold and participate in events
 // @termsOfService             http://swagger.io/terms/
 // @contact.name               Eventic Dev Team
@@ -52,6 +52,6 @@ func health(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"status":  "ok",
 		"time":    time.Now(),
-		"service": "eventic v0.0.0",
+		"service": "eventic v0.3.0",
 	})
 }
