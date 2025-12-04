@@ -23,5 +23,5 @@ func NewHandler(UserService user.Service, TokenSevice jwt.Service, RefreshTokenS
 func RegisterRoutes(group *gin.RouterGroup, h *Handler) {
 	group.POST("/login-email", h.LoginWithEmail)
 	group.POST("/login-phone", h.LoginWithPhone)
-	group.PATCH("/refresh-token", h.RefreshToken)
+	group.POST("/refresh-token", h.RefreshToken)
 }

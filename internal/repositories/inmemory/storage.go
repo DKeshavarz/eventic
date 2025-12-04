@@ -38,6 +38,7 @@ func DefaultDB() *DB {
 			Username: "Danny",
 			Password: "1234",
 			Email:    utile.StrPtr("dankeshavarz1075@gmail.com"),
+			Phone:    utile.StrPtr("09398113791"),
 		},
 	}
 	organizations := make(map[int]*entity.Organization)
