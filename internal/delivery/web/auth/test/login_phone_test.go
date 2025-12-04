@@ -1,4 +1,3 @@
-// auth/handler_test.go
 package auth
 
 import (
@@ -15,20 +14,20 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestHandler_LoginWithEmail(t *testing.T) {
+func TestLoginWithPhone(t *testing.T) {
 	tests := []struct {
 		name       string
 		body       string
 		setupMocks func(userSvc *MockUserService, tokenSvc, refreshSvc *MockJWTService)
 		wantStatus int
-		wantBody   any // LoginResponse or ErrorResponse
+		wantBody   any
 	}{
 		{
-			name: " valid login",
-			body: `{"email":"john@example.com","password":"correct123"}`,
+			name: "valid login",
+			body: `{"phone":"09188119090","password":"correct123"}`,
 			setupMocks: func(u *MockUserService, t, r *MockJWTService) {
-				user := &entity.User{ID: 42, Email: utile.StrPtr("john@example.com")}
-				u.On("LoginWithEmail", "john@example.com", "correct123").Return(user, nil)
+				user := &entity.User{ID: 42, Phone: utile.StrPtr("09188119090")}
+				u.On("LoginWithPhone", "09188119090", "correct123").Return(user, nil)
 				t.On("Generate", user).Return("fake.jwt.access.token", nil)
 				r.On("Generate", user).Return("fake.jwt.refresh.token", nil)
 			},
@@ -52,7 +51,7 @@ func TestHandler_LoginWithEmail(t *testing.T) {
 			// Create handler with mocked dependencies
 			h := &auth.Handler{
 				UserService:         userSvc,
-				TokenSevice:         tokenSvc, // note: your original typo is kept
+				TokenSevice:         tokenSvc, 
 				RefreshTokenService: refreshSvc,
 			}
 
@@ -62,7 +61,7 @@ func TestHandler_LoginWithEmail(t *testing.T) {
 			auth.RegisterRoutes(group, h)
 
 			// Make request
-			req := httptest.NewRequest(http.MethodPost, "/auth/login-email", strings.NewReader(tt.body))
+			req := httptest.NewRequest(http.MethodPost, "/auth/login-phone", strings.NewReader(tt.body))
 			req.Header.Set("Content-Type", "application/json")
 			w := httptest.NewRecorder()
 
