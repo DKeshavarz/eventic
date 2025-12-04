@@ -50,3 +50,12 @@ func (u *UserStorage) Create(user *entity.User) (*entity.User, error) {
 	u.db.userCounter++
 	return user, nil
 }
+
+func (u *UserStorage) GetByID(id int) (*entity.User, error) {
+	if user, exist := u.db.users[id]; exist {
+		return  user, nil
+	}
+	return nil, repositories.ErrUserNotFound
+}
+
+

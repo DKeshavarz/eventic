@@ -79,3 +79,25 @@ func TestCreateAndGetByPhone(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, newUser, getUser)
 }
+
+func TestGetUserByID(t *testing.T) {
+	db := inmemory.NewDB()
+	userStore := inmemory.NewUserStorage(db)
+
+	_, err := userStore.GetByID(1)
+	assert.Equal(t, err, repositories.ErrUserNotFound)
+
+	user := &entity.User{
+		Username: "ali",
+		Password: "1234",
+		Email:    utile.StrPtr("ali@example.com"),
+	}
+	newUser, err := userStore.Create(user)
+
+	assert.Nil(t, err)
+	assert.Equal(t, newUser, user)
+
+	newUserGet, err := userStore.GetByID(newUser.ID)
+	assert.Nil(t, err)
+	assert.Equal(t, newUser, newUserGet)
+}
