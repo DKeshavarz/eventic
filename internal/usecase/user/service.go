@@ -38,3 +38,7 @@ func (s *service) LoginWithPhone(phone, password string) (*entity.User, error) {
 
 	return user, nil
 }
+
+func (s *service) GetByID(id int) (*entity.User, error) {
+	return s.userStorage.GetByID(id)
+}

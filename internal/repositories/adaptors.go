@@ -7,15 +7,16 @@ import (
 )
 
 var (
-	ErrUserNotFound = errors.New("کاربر پیدا نشد")
+	ErrUserNotFound  = errors.New("کاربر پیدا نشد")
 	ErrEventNotFound = errors.New("رویداد پیدا نشد")
-	ErrOrgNotFound = errors.New("سازمان مورد نظر یافت نشد")
+	ErrOrgNotFound   = errors.New("سازمان مورد نظر یافت نشد")
 )
 
 type User interface {
 	Create(user *entity.User) (*entity.User, error)
 	GetUserByPhone(phone string) (*entity.User, error)
 	GetUserByEmail(email string) (*entity.User, error)
+	GetByID(id int) (*entity.User, error)
 }
 
 type Organization interface {

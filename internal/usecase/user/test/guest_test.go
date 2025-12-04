@@ -145,3 +145,8 @@ func (u *userStorage) Create(user *entity.User) (*entity.User, error) {
 	args := u.Called(user)
 	return args.Get(0).(*entity.User), args.Error(1)
 }
+
+func (u *userStorage) GetByID(id int) (*entity.User, error) {
+	args := u.Called(id)
+	return args.Get(0).(*entity.User), args.Error(1)
+}
