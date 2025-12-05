@@ -5,23 +5,28 @@ import (
 
 	"github.com/DKeshavarz/eventic/internal/delivery/telegram"
 	"github.com/DKeshavarz/eventic/internal/delivery/web"
+	"github.com/DKeshavarz/eventic/internal/usecase/user"
 )
 
+type Config struct {
+	WebConfig *web.Config
+	TelegramCofig *telegram.Config
+}
 const (
 	INTERFACES_COUNT = 2
 )
 
-func Start(webCfg *web.Config, telegramCfg *telegram.Config) error{
+func Start(cfg *Config, userSevice user.Service) error{
 	ch := make(chan any)
 
 	go func() {
-		err := web.Start(webCfg)
+		err := web.Start(cfg.WebConfig, userSevice)
 		log.Println("web stpos -> ", err)
 		ch <- "Done"
 	}()
 
 	go func() {
-		err := telegram.Start(telegramCfg)
+		err := telegram.Start(cfg.TelegramCofig)
 		log.Println("telegram stops ->", err)
 		ch <- "Done"
 	}()
