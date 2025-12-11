@@ -11,7 +11,7 @@ type Cache struct {
 	*freecache.Cache
 }
 
-func New() repositories.OTP {
+func New() repositories.Cache {
 	megabyte := 1024 * 1024
 	size := 10
 
@@ -22,6 +22,9 @@ func New() repositories.OTP {
 
 func (c *Cache) Set(key string, value string, ttl time.Duration) error {
 	seconds := int(ttl.Seconds())
+	if seconds <= 0 {
+		return repositories.ErrInvalidExpire
+	}
 	return c.Cache.Set([]byte(key), []byte(value), seconds)
 }
 func (c *Cache) Get(key string) (string, error) {
