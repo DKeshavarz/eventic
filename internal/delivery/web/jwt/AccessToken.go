@@ -13,7 +13,7 @@ type AccessTokenService interface {
 	Validate(tokenString string) (*Claims, error)
 }
 
-type Config struct {
+type AccessTokenConfig struct {
 	Duration time.Duration
 	Secret   []byte
 }
@@ -29,7 +29,7 @@ type Claims struct {
 	jwt.RegisteredClaims
 }
 
-func NewTokenService(cfg *Config) AccessTokenService {
+func NewTokenService(cfg *AccessTokenConfig) AccessTokenService {
 	return &tokenService{
 		duration: cfg.Duration,
 		secret:   cfg.Secret,

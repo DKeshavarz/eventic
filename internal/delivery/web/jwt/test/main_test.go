@@ -16,12 +16,12 @@ var (
 )
 
 func TestMain(m *testing.M) {
-	jwtService = jwt.NewTokenService(&jwt.Config{
+	jwtService = jwt.NewTokenService(&jwt.AccessTokenConfig{
 		Duration: 1 * time.Hour,
 		Secret:   []byte("meow-2025"),
 	})
 
-	InvalidService = jwt.NewTokenService(&jwt.Config{
+	InvalidService = jwt.NewTokenService(&jwt.AccessTokenConfig{
 		Duration: 1 * -time.Hour,
 		Secret:   []byte("meow"),
 	})

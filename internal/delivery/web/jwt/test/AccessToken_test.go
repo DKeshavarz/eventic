@@ -43,7 +43,7 @@ func TestValidateJWT_ExpiredToken(t *testing.T) {
 }
 
 func TestInvalidSignature(t *testing.T) {
-	jwtService2 := jwt.NewTokenService(&jwt.Config{
+	jwtService2 := jwt.NewTokenService(&jwt.AccessTokenConfig{
 		Duration: time.Hour,
 		Secret:   []byte("Meowwww"),
 	})

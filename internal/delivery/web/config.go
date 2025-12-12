@@ -8,18 +8,18 @@ import (
 
 type Config struct {
 	Port         string `env:"port"`
-	Token        *jwt.Config
-	RefreshToken *jwt.Config
+	Token        *jwt.AccessTokenConfig
+	RefreshToken *jwt.AccessTokenConfig
 }
 
 func DefaultConfig() *Config {
 	return &Config{
 		Port: "8080",
-		Token: &jwt.Config{
+		Token: &jwt.AccessTokenConfig{
 			Duration: 30 * time.Minute,
 			Secret: []byte("Black_Cat"),
 		},
-		RefreshToken:  &jwt.Config{
+		RefreshToken:  &jwt.AccessTokenConfig{
 			Duration: 24 * time.Hour,
 			Secret: []byte("Orange_Cat"),
 		},
