@@ -40,8 +40,8 @@ func Start(cfg *Config, userService user.Service) error {
 	server.GET("/swagger/*any", swaggerHandler)
 	server.GET("/health", health)
 
-	token := jwt.NewSevice(cfg.Token)
-	refreshToken := jwt.NewSevice(cfg.RefreshToken)
+	token := jwt.NewTokenService(cfg.Token)
+	refreshToken := jwt.NewTokenService(cfg.RefreshToken)
 
 	authHandler := auth.NewHandler(userService, token, refreshToken)
 	auth.RegisterRoutes(server.Group(""), authHandler)
