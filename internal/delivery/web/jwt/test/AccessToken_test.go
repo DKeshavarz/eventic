@@ -1,32 +1,13 @@
-package jwt
+package jwt_test
 
 import (
 	"testing"
 	"time"
 
-	"github.com/DKeshavarz/eventic/internal/entity"
+	"github.com/DKeshavarz/eventic/internal/delivery/web/jwt"
 	"github.com/stretchr/testify/assert"
 )
 
-var (
-	jwtService TokenService
-    InvalidService TokenService
-	user        *entity.User
-)
-
-func TestMain(m *testing.M) {
-	jwtService = NewTokenService(&Config{
-		Duration: 1 * time.Hour,
-		Secret:   []byte("meow-2025"),
-	})
-
-    InvalidService = NewTokenService(&Config{
-		Duration: 1 * -time.Hour,
-		Secret:   []byte("meow"),
-	})
-	user = &entity.User{ID: 123}
-	m.Run()
-}
 func TestGenerateJWT(t *testing.T) {
 	token, err := jwtService.Generate(user)
 	assert.NoError(t, err)
@@ -62,11 +43,11 @@ func TestValidateJWT_ExpiredToken(t *testing.T) {
 }
 
 func TestInvalidSignature(t *testing.T) {
-	jwtService2 := NewTokenService(&Config{
+	jwtService2 := jwt.NewTokenService(&jwt.Config{
 		Duration: time.Hour,
 		Secret:   []byte("Meowwww"),
 	})
-	
+
 	token, err := jwtService.Generate(user)
 	assert.NoError(t, err)
 
