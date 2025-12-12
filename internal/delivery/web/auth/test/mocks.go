@@ -42,6 +42,6 @@ func (m *MockJWTService) Generate(user *entity.User) (string, error) {
 	return args.String(0), args.Error(1)
 }
 
-func (m *MockJWTService) Validate(tokenString string) (*jwt.Claims, error) {
+func (m *MockJWTService) Validate(tokenString string) (*jwt.AccessTokenClaims, error) {
 	return nil, nil
 }

@@ -10,7 +10,7 @@ import (
 
 type AccessTokenService interface {
 	Generate(user *entity.User) (string, error)
-	Validate(tokenString string) (*Claims, error)
+	Validate(tokenString string) (*AccessTokenClaims, error)
 }
 
 type AccessTokenConfig struct {
@@ -24,7 +24,7 @@ type tokenService struct {
 
 // ------------------------- imp -------------------------
 
-type Claims struct {
+type AccessTokenClaims struct {
 	UserID int `json:"userid"`
 	jwt.RegisteredClaims
 }
@@ -37,7 +37,7 @@ func NewTokenService(cfg *AccessTokenConfig) AccessTokenService {
 }
 
 func (s *tokenService) Generate(user *entity.User) (string, error) {
-	claims := &Claims{
+	claims := &AccessTokenClaims{
 		UserID: user.ID,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(s.duration)),
@@ -49,9 +49,9 @@ func (s *tokenService) Generate(user *entity.User) (string, error) {
 	return jwtToken.SignedString(s.secret)
 }
 
-func (s *tokenService) Validate(tokenString string) (*Claims, error) {
+func (s *tokenService) Validate(tokenString string) (*AccessTokenClaims, error) {
 
-	token, err := jwt.ParseWithClaims(tokenString, &Claims{}, func(token *jwt.Token) (interface{}, error) {
+	token, err := jwt.ParseWithClaims(tokenString, &AccessTokenClaims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, errors.New("unexpected signing method")
 		}
@@ -61,7 +61,7 @@ func (s *tokenService) Validate(tokenString string) (*Claims, error) {
 		return nil, err
 	}
 
-	claims, ok := token.Claims.(*Claims)
+	claims, ok := token.Claims.(*AccessTokenClaims)
 	if !ok || !token.Valid {
 		return nil, errors.New("invalid token")
 	}
