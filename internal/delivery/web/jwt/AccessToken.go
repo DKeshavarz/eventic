@@ -17,7 +17,7 @@ type AccessTokenConfig struct {
 	Duration time.Duration
 	Secret   []byte
 }
-type tokenService struct {
+type accessTokenService struct {
 	duration time.Duration
 	secret   []byte
 }
@@ -30,13 +30,13 @@ type AccessTokenClaims struct {
 }
 
 func NewTokenService(cfg *AccessTokenConfig) AccessTokenService {
-	return &tokenService{
+	return &accessTokenService{
 		duration: cfg.Duration,
 		secret:   cfg.Secret,
 	}
 }
 
-func (s *tokenService) Generate(user *entity.User) (string, error) {
+func (s *accessTokenService) Generate(user *entity.User) (string, error) {
 	claims := &AccessTokenClaims{
 		UserID: user.ID,
 		RegisteredClaims: jwt.RegisteredClaims{
@@ -49,7 +49,7 @@ func (s *tokenService) Generate(user *entity.User) (string, error) {
 	return jwtToken.SignedString(s.secret)
 }
 
-func (s *tokenService) Validate(tokenString string) (*AccessTokenClaims, error) {
+func (s *accessTokenService) Validate(tokenString string) (*AccessTokenClaims, error) {
 
 	token, err := jwt.ParseWithClaims(tokenString, &AccessTokenClaims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
