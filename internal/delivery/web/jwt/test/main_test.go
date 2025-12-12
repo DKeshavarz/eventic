@@ -9,8 +9,8 @@ import (
 )
 
 var (
-	jwtService     jwt.TokenService
-	InvalidService jwt.TokenService
+	jwtService     jwt.AccessTokenService
+	InvalidService jwt.AccessTokenService
 	user           *entity.User
 	signerHMAC     jwt.TokenSigner
 )

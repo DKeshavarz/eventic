@@ -8,11 +8,11 @@ import (
 
 type Handler struct {
 	UserService         user.Service
-	TokenSevice         jwt.TokenService
-	RefreshTokenService jwt.TokenService
+	TokenSevice         jwt.AccessTokenService
+	RefreshTokenService jwt.AccessTokenService
 }
 
-func NewHandler(UserService user.Service, TokenSevice jwt.TokenService, RefreshTokenService jwt.TokenService) *Handler {
+func NewHandler(UserService user.Service, TokenSevice jwt.AccessTokenService, RefreshTokenService jwt.AccessTokenService) *Handler {
 	return &Handler{
 		UserService:         UserService,
 		TokenSevice:         TokenSevice,

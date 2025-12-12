@@ -8,7 +8,7 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-type TokenService interface {
+type AccessTokenService interface {
 	Generate(user *entity.User) (string, error)
 	Validate(tokenString string) (*Claims, error)
 }
@@ -22,19 +22,21 @@ type tokenService struct {
 	secret   []byte
 }
 
-func NewTokenService(cfg *Config) TokenService{
-	return &tokenService{
-		duration: cfg.Duration,
-		secret: cfg.Secret,
-	}
-}
+// ------------------------- imp -------------------------
 
 type Claims struct {
 	UserID int `json:"userid"`
 	jwt.RegisteredClaims
 }
 
-func (s *tokenService)Generate(user *entity.User) (string, error) {
+func NewTokenService(cfg *Config) AccessTokenService {
+	return &tokenService{
+		duration: cfg.Duration,
+		secret:   cfg.Secret,
+	}
+}
+
+func (s *tokenService) Generate(user *entity.User) (string, error) {
 	claims := &Claims{
 		UserID: user.ID,
 		RegisteredClaims: jwt.RegisteredClaims{
@@ -47,7 +49,7 @@ func (s *tokenService)Generate(user *entity.User) (string, error) {
 	return jwtToken.SignedString(s.secret)
 }
 
-func (s *tokenService)Validate(tokenString string) (*Claims, error) {
+func (s *tokenService) Validate(tokenString string) (*Claims, error) {
 
 	token, err := jwt.ParseWithClaims(tokenString, &Claims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
