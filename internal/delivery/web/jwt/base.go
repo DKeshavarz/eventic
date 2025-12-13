@@ -8,7 +8,7 @@ import (
 
 type TokenSigner interface {
 	Sign(claims jwt.Claims) (string, error)
-	Parse(tokenString string, claims jwt.Claims) error
+	Parse(tokenString string, claims jwt.Claims) (*jwt.Token, error)
 }
 
 const (
@@ -31,13 +31,13 @@ func (s *hmacSigner) Sign(claims jwt.Claims) (string, error) {
 	return token.SignedString(s.secret)
 }
 
-func (s *hmacSigner) Parse(tokenString string, claims jwt.Claims) error {
-	_, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
+func (s *hmacSigner) Parse(tokenString string, claims jwt.Claims) (*jwt.Token, error) {
+	token , err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
 
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
 		return s.secret, nil
 	})
-	return err
+	return token, err
 }

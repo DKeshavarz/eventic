@@ -29,7 +29,7 @@ func TestCustomHMACSigner_SignAndParse(t *testing.T) {
 	require.NoError(t, err)
 
 	parsedClaims := &CustomClaims{}
-	err = signerHMAC.Parse(tokenString, parsedClaims)
+	_, err = signerHMAC.Parse(tokenString, parsedClaims)
 	require.NoError(t, err)
 
 	assert.Equal(t, "user-123", parsedClaims.UserID)
