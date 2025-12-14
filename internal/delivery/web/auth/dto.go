@@ -23,11 +23,4 @@ type ErrorResponse struct {
 	Meta  string `json:"meta,omitempty"`
 }
 
-type SendEamilOTPRequest struct {
-	Email string `json:"email"`
-}
 
-type SendEamilOTPRespone struct {
-	Token string `json:"token,omitempty"`
-	Error string `json:"error,omitempty"`
-}

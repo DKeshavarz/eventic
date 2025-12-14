@@ -7,6 +7,9 @@ import (
 	_ "github.com/DKeshavarz/eventic/docs"
 	"github.com/DKeshavarz/eventic/internal/delivery/web/auth"
 	"github.com/DKeshavarz/eventic/internal/delivery/web/jwt"
+
+	usecasAuth "github.com/DKeshavarz/eventic/internal/usecase/auth"
+
 	"github.com/DKeshavarz/eventic/internal/usecase/user"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -24,9 +27,8 @@ import (
 // @in                         header
 // @name                       Authorization
 // @description                Type `Bearer ` followed by your JWT token. example: "Bearer abcde12345"
-func Start(cfg *Config, userService user.Service) error {
+func Start(cfg *Config, userService user.Service, authService usecasAuth.Service) error {
 	server := gin.Default()
-
 	corsConfig := cors.Config{
 		AllowOrigins: []string{"*"},
 		AllowMethods: []string{"GET", "POST", "PUT", "DELETE"},
@@ -42,8 +44,8 @@ func Start(cfg *Config, userService user.Service) error {
 
 	token := jwt.NewTokenService(cfg.Token)
 	refreshToken := jwt.NewTokenService(cfg.RefreshToken)
-
-	authHandler := auth.NewHandler(userService, token, refreshToken)
+	
+	authHandler := auth.NewHandler(userService, token, refreshToken, authService)
 	auth.RegisterRoutes(server.Group(""), authHandler)
 	return server.Run(":" + cfg.Port)
 }
