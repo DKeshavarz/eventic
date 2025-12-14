@@ -156,6 +156,52 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/signup-otp-request": {
+            "post": {
+                "description": "Send otp by email to a user for login process of a user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Send otp for a user",
+                "parameters": [
+                    {
+                        "description": "Login info",
+                        "name": "login",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/auth.SendEamilOTPRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/auth.SendOTPResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/auth.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/auth.ErrorResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -210,6 +256,40 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
+        },
+        "auth.SendEamilOTPRequest": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                }
+            }
+        },
+        "auth.SendOTPResponse": {
+            "type": "object",
+            "properties": {
+                "expires_in_second": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "method": {
+                    "$ref": "#/definitions/auth.method"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "auth.method": {
+            "type": "string",
+            "enum": [
+                "email"
+            ],
+            "x-enum-varnames": [
+                "email"
+            ]
         }
     },
     "securityDefinitions": {

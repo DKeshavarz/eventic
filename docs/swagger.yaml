@@ -32,6 +32,28 @@ definitions:
       refresh_token:
         type: string
     type: object
+  auth.SendEamilOTPRequest:
+    properties:
+      email:
+        type: string
+    type: object
+  auth.SendOTPResponse:
+    properties:
+      expires_in_second:
+        type: integer
+      message:
+        type: string
+      method:
+        $ref: '#/definitions/auth.method'
+      success:
+        type: boolean
+    type: object
+  auth.method:
+    enum:
+    - email
+    type: string
+    x-enum-varnames:
+    - email
 info:
   contact:
     name: Eventic Dev Team
@@ -131,6 +153,36 @@ paths:
           schema:
             $ref: '#/definitions/auth.ErrorResponse'
       summary: Refresh JWT token
+      tags:
+      - Auth
+  /signup-otp-request:
+    post:
+      consumes:
+      - application/json
+      description: Send otp by email to a user for login process of a user
+      parameters:
+      - description: Login info
+        in: body
+        name: login
+        required: true
+        schema:
+          $ref: '#/definitions/auth.SendEamilOTPRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/auth.SendOTPResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/auth.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/auth.ErrorResponse'
+      summary: Send otp for a user
       tags:
       - Auth
 securityDefinitions:
