@@ -44,8 +44,12 @@ func Start(cfg *Config, userService user.Service, authService usecasAuth.Service
 
 	token := jwt.NewTokenService(cfg.Token)
 	refreshToken := jwt.NewTokenService(cfg.RefreshToken)
+	signupToken := jwt.NewSignupTokenService(&jwt.SignupTokenConfig{
+		Duration: 25 * time.Minute,
+		Secret: []byte("verty secret-cdoe"),
+	})
 	
-	authHandler := auth.NewHandler(userService, token, refreshToken, authService)
+	authHandler := auth.NewHandler(userService, token, refreshToken, authService, signupToken)
 	auth.RegisterRoutes(server.Group(""), authHandler)
 	return server.Run(":" + cfg.Port)
 }
