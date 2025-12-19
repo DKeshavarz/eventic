@@ -48,6 +48,22 @@ definitions:
       success:
         type: boolean
     type: object
+  auth.VerifyEmailOTPRequest:
+    properties:
+      code:
+        type: string
+      email:
+        type: string
+    type: object
+  auth.VerifyEmailOTPResponse:
+    properties:
+      message:
+        type: string
+      success:
+        type: boolean
+      token:
+        type: string
+    type: object
   auth.method:
     enum:
     - email
@@ -183,6 +199,36 @@ paths:
           schema:
             $ref: '#/definitions/auth.ErrorResponse'
       summary: Send otp for a user
+      tags:
+      - Auth
+  /signup-otp-verify:
+    post:
+      consumes:
+      - application/json
+      description: Validate otp by email to a user for signup process of a user
+      parameters:
+      - description: Login info
+        in: body
+        name: login
+        required: true
+        schema:
+          $ref: '#/definitions/auth.VerifyEmailOTPRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/auth.VerifyEmailOTPResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/auth.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/auth.ErrorResponse'
+      summary: Validate otp for a user
       tags:
       - Auth
 securityDefinitions:
