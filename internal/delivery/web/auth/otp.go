@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/DKeshavarz/eventic/internal/entity/validation"
 	"github.com/gin-gonic/gin"
 )
 
@@ -48,8 +49,13 @@ func (h *Handler) SendEmailOTP(c *gin.Context) {
 		return
 	}
 
-	//TODO: email
-	if err := h.AuthService.SendOTP(req.Email, 5*time.Second); err != nil {
+	//TODO: email duplicated
+	if err := validation.Email(req.Email); err != nil {
+		c.JSON(http.StatusBadRequest, ErrorResponse{Error: err.Error()})
+		return
+	}
+
+	if err := h.AuthService.SendOTP(req.Email, 2*time.Minute); err != nil {
 		c.JSON(http.StatusInternalServerError, ErrorResponse{
 			Error: err.Error(),
 		})
