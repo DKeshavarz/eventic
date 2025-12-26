@@ -1,6 +1,8 @@
 package event
 
 import (
+	"log"
+
 	"github.com/DKeshavarz/eventic/internal/entity"
 )
 
@@ -20,9 +22,13 @@ func (s *service) Join(joinEvent *entity.JoinEvent) (*entity.JoinEvent, error) {
 }
 
 func (s *service) GetAll() (events []*entity.Event,err error){
-	return s.eventStorage.GetAll()
+	events, err = s.eventStorage.GetAll()
+	// log.Println(events[0], err)
+	return
 }
 
 func (s *service) Get(id int)(event *entity.Event,err error) {
-	return s.eventStorage.GetByID(id)
+	event, err = s.eventStorage.GetByID(id)
+	log.Println(event, err)
+	return
 }
