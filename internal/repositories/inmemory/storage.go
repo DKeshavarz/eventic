@@ -2,6 +2,7 @@ package inmemory
 
 import (
 	"sync"
+	"time"
 
 	"github.com/DKeshavarz/eventic/internal/entity"
 	"github.com/DKeshavarz/eventic/pkg/utile"
@@ -41,8 +42,24 @@ func DefaultDB() *DB {
 			Phone:    utile.StrPtr("09398113791"),
 		},
 	}
+	currTime := time.Now()
+	events := map[int]*entity.Event{
+		1: {
+			ID: 1,
+			OrganizerID: 1,
+			Title: "دوره خواب کوالایی",
+			Cost: 1000,
+			DateTime: currTime.Add(72 * time.Hour),
+			Description: 
+			`
+			سالانه هزار دانشجو به خاطر کبود خواب فوت می کنند.
+
+			توی این دوره بهت یاد می دیم که چطور به خواب ابدی فرو بری و دیگه لازم نیست نگران هیچ تکلیفی باشی.
+			`,
+			Location: utile.StrPtr("سلف مرکزی"),
+		},
+	}
 	organizations := make(map[int]*entity.Organization)
-	events := make(map[int]*entity.Event)
 	joinEvents := make(map[string]*entity.JoinEvent)
 
 	return &DB{
