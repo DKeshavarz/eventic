@@ -57,6 +57,7 @@ func DefaultDB() *DB {
 			توی این دوره بهت یاد می دیم که چطور به خواب ابدی فرو بری و دیگه لازم نیست نگران هیچ تکلیفی باشی.
 			`,
 			Location: utile.StrPtr("سلف مرکزی"),
+			PosterPic: utile.StrPtr("/static/uploads/events/image.png"),
 		},
 	}
 	organizations := make(map[int]*entity.Organization)

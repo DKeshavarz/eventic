@@ -8,6 +8,7 @@ import (
 	"github.com/DKeshavarz/eventic/internal/delivery/web/auth"
 	"github.com/DKeshavarz/eventic/internal/delivery/web/event"
 	"github.com/DKeshavarz/eventic/internal/delivery/web/jwt"
+	"github.com/DKeshavarz/eventic/internal/delivery/web/statics"
 
 	usecasAuth "github.com/DKeshavarz/eventic/internal/usecase/auth"
 	usecaseEvent "github.com/DKeshavarz/eventic/internal/usecase/event"
@@ -57,6 +58,8 @@ func Start(cfg *Config, userService user.Service, eventSevice usecaseEvent.Servi
 
 	eventHandler := event.NewHandler(eventSevice)
 	event.RegisterRoutes(server.Group("/event"), eventHandler)
+
+	statics.Register(server.Group("/static"))
 	return server.Run(":" + cfg.Port)
 }
 
