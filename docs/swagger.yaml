@@ -70,6 +70,15 @@ definitions:
     type: string
     x-enum-varnames:
     - email
+  event.ErrorResponse:
+    properties:
+      error:
+        type: string
+      meta:
+        type: string
+    type: object
+  event.GetAllEventsResponse:
+    type: object
 info:
   contact:
     name: Eventic Dev Team
@@ -79,6 +88,29 @@ info:
   title: Eventic
   version: 0.3.0
 paths:
+  /:
+    get:
+      consumes:
+      - application/json
+      description: Get All Events
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/event.GetAllEventsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/event.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/event.ErrorResponse'
+      summary: Get All Events
+      tags:
+      - Event
   /login-email:
     post:
       consumes:

@@ -18,7 +18,7 @@ type ErrorResponse struct {
 // Login        godoc
 // @Summary     Get All Events
 // @Description Get All Events
-// @Tags        Auth
+// @Tags        Event
 // @Accept      json
 // @Produce     json
 // @Success     200 {object} GetAllEventsResponse

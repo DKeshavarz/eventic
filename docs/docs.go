@@ -19,6 +19,41 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/": {
+            "get": {
+                "description": "Get All Events",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Event"
+                ],
+                "summary": "Get All Events",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/event.GetAllEventsResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/event.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/event.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/login-email": {
             "post": {
                 "description": "Login a user with Eamil to app and generate a hwt token and a jwt refresh token",
@@ -361,6 +396,20 @@ const docTemplate = `{
             "x-enum-varnames": [
                 "email"
             ]
+        },
+        "event.ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string"
+                },
+                "meta": {
+                    "type": "string"
+                }
+            }
+        },
+        "event.GetAllEventsResponse": {
+            "type": "object"
         }
     },
     "securityDefinitions": {
