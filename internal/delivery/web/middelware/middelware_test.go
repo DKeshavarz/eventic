@@ -15,11 +15,11 @@ import (
 
 func TestAuthMiddleware(t *testing.T) {
 	gin.SetMode(gin.TestMode)
-	jwtService := jwt.NewSevice(&jwt.Config{
+	jwtService := jwt.NewTokenService(&jwt.AccessTokenConfig{
 		Duration: time.Hour,
 		Secret: []byte("moew"),
 	})
-	otherJwtService := jwt.NewSevice(&jwt.Config{
+	otherJwtService := jwt.NewTokenService(&jwt.AccessTokenConfig{
 		Duration: time.Hour,
 		Secret: []byte("moewww"),
 	})

@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Auth(jwtSevice jwt.Service) gin.HandlerFunc {
+func Auth(jwtTokenService jwt.AccessTokenService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authHeader := c.GetHeader("Authorization")
 		if authHeader == "" {
@@ -24,7 +24,7 @@ func Auth(jwtSevice jwt.Service) gin.HandlerFunc {
 			return
 		}
 
-		claims, err := jwtSevice.Validate(parts[1])
+		claims, err := jwtTokenService.Validate(parts[1])
 		if err != nil {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid or expired token"})
 			c.Abort()

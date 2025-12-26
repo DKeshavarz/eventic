@@ -32,6 +32,84 @@ definitions:
       refresh_token:
         type: string
     type: object
+  auth.SendEamilOTPRequest:
+    properties:
+      email:
+        type: string
+    type: object
+  auth.SendOTPResponse:
+    properties:
+      expires_in_second:
+        type: integer
+      message:
+        type: string
+      method:
+        $ref: '#/definitions/auth.method'
+      success:
+        type: boolean
+    type: object
+  auth.VerifyEmailOTPRequest:
+    properties:
+      code:
+        type: string
+      email:
+        type: string
+    type: object
+  auth.VerifyEmailOTPResponse:
+    properties:
+      message:
+        type: string
+      success:
+        type: boolean
+      token:
+        type: string
+    type: object
+  auth.method:
+    enum:
+    - email
+    type: string
+    x-enum-varnames:
+    - email
+  entity.Event:
+    properties:
+      cost:
+        type: integer
+      datetime:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      link:
+        type: string
+      location:
+        type: string
+      organizer_id:
+        type: integer
+      poster_pic:
+        type: string
+      title:
+        type: string
+    type: object
+  event.ErrorResponse:
+    properties:
+      error:
+        type: string
+      meta:
+        type: string
+    type: object
+  event.GetAllEventsResponse:
+    properties:
+      events:
+        items:
+          $ref: '#/definitions/entity.Event'
+        type: array
+    type: object
+  event.GetEventResponse:
+    properties:
+      event:
+        $ref: '#/definitions/entity.Event'
+    type: object
 info:
   contact:
     name: Eventic Dev Team
@@ -41,6 +119,63 @@ info:
   title: Eventic
   version: 0.3.0
 paths:
+  /event/:
+    get:
+      consumes:
+      - application/json
+      description: Get All Events
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/event.GetAllEventsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/event.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/event.ErrorResponse'
+      summary: Get All Events
+      tags:
+      - Event
+  /event/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a specific event using its unique identifier
+      parameters:
+      - description: Event ID
+        in: path
+        minimum: 1
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Event retrieved successfully
+          schema:
+            $ref: '#/definitions/event.GetEventResponse'
+        "400":
+          description: Invalid event ID or bad request
+          schema:
+            $ref: '#/definitions/event.ErrorResponse'
+        "404":
+          description: Event not found
+          schema:
+            $ref: '#/definitions/event.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/event.ErrorResponse'
+      summary: Get a single event by ID
+      tags:
+      - Event
   /login-email:
     post:
       consumes:
@@ -131,6 +266,66 @@ paths:
           schema:
             $ref: '#/definitions/auth.ErrorResponse'
       summary: Refresh JWT token
+      tags:
+      - Auth
+  /signup-otp-request:
+    post:
+      consumes:
+      - application/json
+      description: Send otp by email to a user for login process of a user
+      parameters:
+      - description: Login info
+        in: body
+        name: login
+        required: true
+        schema:
+          $ref: '#/definitions/auth.SendEamilOTPRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/auth.SendOTPResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/auth.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/auth.ErrorResponse'
+      summary: Send otp for a user
+      tags:
+      - Auth
+  /signup-otp-verify:
+    post:
+      consumes:
+      - application/json
+      description: Validate otp by email to a user for signup process of a user
+      parameters:
+      - description: Login info
+        in: body
+        name: login
+        required: true
+        schema:
+          $ref: '#/definitions/auth.VerifyEmailOTPRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/auth.VerifyEmailOTPResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/auth.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/auth.ErrorResponse'
+      summary: Validate otp for a user
       tags:
       - Auth
 securityDefinitions:

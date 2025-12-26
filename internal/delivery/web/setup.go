@@ -6,7 +6,13 @@ import (
 
 	_ "github.com/DKeshavarz/eventic/docs"
 	"github.com/DKeshavarz/eventic/internal/delivery/web/auth"
+	"github.com/DKeshavarz/eventic/internal/delivery/web/event"
 	"github.com/DKeshavarz/eventic/internal/delivery/web/jwt"
+	"github.com/DKeshavarz/eventic/internal/delivery/web/statics"
+
+	usecasAuth "github.com/DKeshavarz/eventic/internal/usecase/auth"
+	usecaseEvent "github.com/DKeshavarz/eventic/internal/usecase/event"
+
 	"github.com/DKeshavarz/eventic/internal/usecase/user"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -24,9 +30,9 @@ import (
 // @in                         header
 // @name                       Authorization
 // @description                Type `Bearer ` followed by your JWT token. example: "Bearer abcde12345"
-func Start(cfg *Config, userService user.Service) error {
+func Start(cfg *Config, userService user.Service, eventSevice usecaseEvent.Service, authService usecasAuth.Service) error {
+	
 	server := gin.Default()
-
 	corsConfig := cors.Config{
 		AllowOrigins: []string{"*"},
 		AllowMethods: []string{"GET", "POST", "PUT", "DELETE"},
@@ -40,11 +46,20 @@ func Start(cfg *Config, userService user.Service) error {
 	server.GET("/swagger/*any", swaggerHandler)
 	server.GET("/health", health)
 
-	token := jwt.NewSevice(cfg.Token)
-	refreshToken := jwt.NewSevice(cfg.RefreshToken)
-
-	authHandler := auth.NewHandler(userService, token, refreshToken)
+	token := jwt.NewTokenService(cfg.Token)
+	refreshToken := jwt.NewTokenService(cfg.RefreshToken)
+	signupToken := jwt.NewSignupTokenService(&jwt.SignupTokenConfig{
+		Duration: 25 * time.Minute,
+		Secret: []byte("verty secret-cdoe"),
+	})
+	
+	authHandler := auth.NewHandler(userService, token, refreshToken, authService, signupToken)
 	auth.RegisterRoutes(server.Group(""), authHandler)
+
+	eventHandler := event.NewHandler(eventSevice)
+	event.RegisterRoutes(server.Group("/event"), eventHandler)
+
+	statics.Register(server.Group("/static"))
 	return server.Run(":" + cfg.Port)
 }
 

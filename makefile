@@ -29,7 +29,7 @@ test: ## Run tests
 
 dep: ## Download and vendor dependencies
 	go mod tidy
-	go mod vendor
+# go mod vendor
 
 swag: ## Generate Swagger docs (requires github.com/swaggo/swag)
 	@which swag >/dev/null 2>&1 || (echo "Installing swag..." && go install github.com/swaggo/swag/cmd/swag@latest)

@@ -15,12 +15,12 @@ type userStorage struct {
 
 func TestLoginWithPhone(t *testing.T) {
 	testCases := []struct {
-		name     string
-		phone    string
-		password string
-		setupMock     func(m *userStorage)
-		wantErr  error
-		wantUser *entity.User
+		name      string
+		phone     string
+		password  string
+		setupMock func(m *userStorage)
+		wantErr   error
+		wantUser  *entity.User
 	}{
 		{
 			name:     "success 1",
@@ -33,7 +33,7 @@ func TestLoginWithPhone(t *testing.T) {
 					Password: "123456",
 				}, nil)
 			},
-			wantErr:  nil,
+			wantErr: nil,
 			wantUser: &entity.User{
 				ID:       1,
 				Phone:    strPtr("09123456789"),
@@ -71,7 +71,7 @@ func TestLoginWithPhone(t *testing.T) {
 					Password: "1111",
 				}, nil)
 			},
-			wantErr:  nil,
+			wantErr: nil,
 			wantUser: &entity.User{
 				ID:       2,
 				Phone:    strPtr("09188119090"),
@@ -79,8 +79,8 @@ func TestLoginWithPhone(t *testing.T) {
 			},
 		},
 		{
-			name:     "user not found",
-			phone:    "09188119091",
+			name:  "user not found",
+			phone: "09188119091",
 			setupMock: func(m *userStorage) {
 				m.On("GetUserByPhone", "09188119091").Return(&entity.User{}, user.ErrUserNotFound)
 			},
@@ -89,8 +89,8 @@ func TestLoginWithPhone(t *testing.T) {
 			wantUser: nil,
 		},
 		{
-			name:     "invalid password",
-			phone:    "09188119091",
+			name:  "invalid password",
+			phone: "09188119091",
 			setupMock: func(m *userStorage) {
 				m.On("GetUserByPhone", "09188119091").Return(&entity.User{
 					ID:       2,
@@ -104,7 +104,6 @@ func TestLoginWithPhone(t *testing.T) {
 		},
 	}
 
-
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 
@@ -113,7 +112,7 @@ func TestLoginWithPhone(t *testing.T) {
 			tc.setupMock(userStorage)
 
 			guest := user.NewSevice(userStorage)
-			
+
 			user, err := guest.LoginWithPhone(tc.phone, tc.password)
 
 			if tc.wantErr != nil {
