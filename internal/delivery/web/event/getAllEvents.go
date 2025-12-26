@@ -24,7 +24,7 @@ type ErrorResponse struct {
 // @Success     200 {object} GetAllEventsResponse
 // @Failure     400 {object} ErrorResponse
 // @Failure     500 {object} ErrorResponse
-// @Router      / [get]
+// @Router      /event/ [get]
 func (h *Handler) GetAllEvents(c *gin.Context) {
 	events, err := h.eventSerivce.GetAll()
 
