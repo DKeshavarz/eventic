@@ -19,7 +19,7 @@ func (s *EventStorage) GetByID(id int) (*entity.Event, error) {
 	s.db.mu.RLock()
 	defer s.db.mu.RUnlock()
 
-	if val, exist := s.db.events[id] ; exist {
+	if val, exist := s.db.events[id]; exist {
 		return val, nil
 	}
 	return nil, repositories.ErrEventNotFound
@@ -34,6 +34,10 @@ func (s *EventStorage) Create(event *entity.Event) (*entity.Event, error) {
 
 	return event, nil
 }
-func (s *EventStorage)GetAll() ([]*entity.Event, error){
-	return nil, nil
+
+func (s *EventStorage) GetAll() (events []*entity.Event, err error) {
+	for _, event := range s.db.events {
+		events = append(events, event)
+	}
+	return events, nil
 }

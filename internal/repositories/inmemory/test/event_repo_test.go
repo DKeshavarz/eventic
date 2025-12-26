@@ -54,3 +54,32 @@ func TestCreateAndGet(t *testing.T){
 	assert.Nil(t, err)
 	assert.Equal(t, storeEvent, event)
 }
+
+func TestCreateAndGetAll(t *testing.T){
+	db := inmemory.NewDB()
+	eventStorage := inmemory.NewEventStorage(db)
+
+	event1 := &entity.Event{
+		Title: "title",
+		Description: "descripton",
+		Cost: 100,
+		DateTime: time.Now().Add(time.Hour * 72),
+	}
+	newEvent, err := eventStorage.Create(event1)
+	assert.Nil(t, err)
+	assert.Equal(t, newEvent, event1)
+
+	event2 := &entity.Event{
+		Title: "title 2",
+		Description: "descripton 2",
+		Cost: 1000,
+		DateTime: time.Now().Add(time.Hour * 2),
+	}
+	newEvent, err = eventStorage.Create(event2)
+	assert.Nil(t, err)
+	assert.Equal(t, newEvent, event2)
+
+	allEvents, err := eventStorage.GetAll()
+	assert.Nil(t, err)
+	assert.ElementsMatch(t, allEvents, []*entity.Event{event1, event2})
+}
