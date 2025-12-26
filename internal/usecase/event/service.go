@@ -24,5 +24,5 @@ func (s *service) GetAll() (events []*entity.Event,err error){
 }
 
 func (s *service) Get(id int)(event *entity.Event,err error) {
-	return
+	return s.eventStorage.GetByID(id)
 }
