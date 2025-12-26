@@ -11,6 +11,7 @@ type Service interface {
 	Create(event *entity.Event) (*entity.Event, error)
 	Join(joinEvent *entity.JoinEvent) (*entity.JoinEvent, error)
 	GetAll()([]*entity.Event, error)
+	Get(id int)(*entity.Event, error)
 }
 
 var (

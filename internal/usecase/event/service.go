@@ -22,3 +22,7 @@ func (s *service) Join(joinEvent *entity.JoinEvent) (*entity.JoinEvent, error) {
 func (s *service) GetAll() (events []*entity.Event,err error){
 	return s.eventStorage.GetAll()
 }
+
+func (s *service) Get(id int)(event *entity.Event,err error) {
+	return
+}
