@@ -27,6 +27,7 @@ type Organization interface {
 type Event interface {
 	GetByID(id int) (*entity.Event, error)
 	Create(event *entity.Event) (*entity.Event, error)
+	GetAll() ([]*entity.Event, error)
 }
 
 type JoinEvent interface {

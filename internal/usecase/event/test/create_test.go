@@ -107,8 +107,12 @@ func (e *eventStorage) GetByID(id int) (*entity.Event, error) {
 	args := e.Called(id)
 	return args.Get(0).(*entity.Event), args.Error(1)
 }
-
+func (e *eventStorage) GetAll() ([]*entity.Event, error) {
+	args := e.Called()
+	return args.Get(0).([]*entity.Event), args.Error(1)
+}
 func (e *joinEventStorage) GetByUserID(id int) ([]*entity.JoinEvent, error) {
 	args := e.Called(id)
 	return args.Get(0).([]*entity.JoinEvent), args.Error(1)
 }
+

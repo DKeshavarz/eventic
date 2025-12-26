@@ -34,3 +34,6 @@ func (s *EventStorage) Create(event *entity.Event) (*entity.Event, error) {
 
 	return event, nil
 }
+func (s *EventStorage)GetAll() ([]*entity.Event, error){
+	return nil, nil
+}
