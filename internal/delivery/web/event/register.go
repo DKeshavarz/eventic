@@ -17,4 +17,5 @@ func NewHandler(eventSerivce event.Service) *Handler {
 
 func RegisterRoutes(group *gin.RouterGroup, h *Handler) {
 	group.GET("/", h.GetAllEvents)
+	group.GET("/:id", h.GetEvents)
 }
