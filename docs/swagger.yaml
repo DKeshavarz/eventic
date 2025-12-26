@@ -70,6 +70,27 @@ definitions:
     type: string
     x-enum-varnames:
     - email
+  entity.Event:
+    properties:
+      cost:
+        type: integer
+      datetime:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      link:
+        type: string
+      location:
+        type: string
+      organizer_id:
+        type: integer
+      poster_pic:
+        type: string
+      title:
+        type: string
+    type: object
   event.ErrorResponse:
     properties:
       error:
@@ -78,6 +99,16 @@ definitions:
         type: string
     type: object
   event.GetAllEventsResponse:
+    properties:
+      events:
+        items:
+          $ref: '#/definitions/entity.Event'
+        type: array
+    type: object
+  event.GetEventResponse:
+    properties:
+      event:
+        $ref: '#/definitions/entity.Event'
     type: object
 info:
   contact:
@@ -109,6 +140,40 @@ paths:
           schema:
             $ref: '#/definitions/event.ErrorResponse'
       summary: Get All Events
+      tags:
+      - Event
+  /event/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a specific event using its unique identifier
+      parameters:
+      - description: Event ID
+        in: path
+        minimum: 1
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Event retrieved successfully
+          schema:
+            $ref: '#/definitions/event.GetEventResponse'
+        "400":
+          description: Invalid event ID or bad request
+          schema:
+            $ref: '#/definitions/event.ErrorResponse'
+        "404":
+          description: Event not found
+          schema:
+            $ref: '#/definitions/event.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/event.ErrorResponse'
+      summary: Get a single event by ID
       tags:
       - Event
   /login-email:

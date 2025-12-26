@@ -54,6 +54,57 @@ const docTemplate = `{
                 }
             }
         },
+        "/event/{id}": {
+            "get": {
+                "description": "Retrieve a specific event using its unique identifier",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Event"
+                ],
+                "summary": "Get a single event by ID",
+                "parameters": [
+                    {
+                        "minimum": 1,
+                        "type": "integer",
+                        "description": "Event ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Event retrieved successfully",
+                        "schema": {
+                            "$ref": "#/definitions/event.GetEventResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid event ID or bad request",
+                        "schema": {
+                            "$ref": "#/definitions/event.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Event not found",
+                        "schema": {
+                            "$ref": "#/definitions/event.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/event.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/login-email": {
             "post": {
                 "description": "Login a user with Eamil to app and generate a hwt token and a jwt refresh token",
@@ -397,6 +448,38 @@ const docTemplate = `{
                 "email"
             ]
         },
+        "entity.Event": {
+            "type": "object",
+            "properties": {
+                "cost": {
+                    "type": "integer"
+                },
+                "datetime": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "link": {
+                    "type": "string"
+                },
+                "location": {
+                    "type": "string"
+                },
+                "organizer_id": {
+                    "type": "integer"
+                },
+                "poster_pic": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
         "event.ErrorResponse": {
             "type": "object",
             "properties": {
@@ -409,7 +492,23 @@ const docTemplate = `{
             }
         },
         "event.GetAllEventsResponse": {
-            "type": "object"
+            "type": "object",
+            "properties": {
+                "events": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/entity.Event"
+                    }
+                }
+            }
+        },
+        "event.GetEventResponse": {
+            "type": "object",
+            "properties": {
+                "event": {
+                    "$ref": "#/definitions/entity.Event"
+                }
+            }
         }
     },
     "securityDefinitions": {
