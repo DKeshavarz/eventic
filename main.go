@@ -7,6 +7,7 @@ import (
 	"github.com/DKeshavarz/eventic/internal/repositories/cache"
 	"github.com/DKeshavarz/eventic/internal/repositories/inmemory"
 	"github.com/DKeshavarz/eventic/internal/usecase/auth"
+	"github.com/DKeshavarz/eventic/internal/usecase/event"
 	"github.com/DKeshavarz/eventic/internal/usecase/user"
 )
 
@@ -17,12 +18,14 @@ func main() {
 	cache := cache.New()
 	sender := mail.New(cfg.Mail)
 	userStorage := inmemory.NewUserStorage(db)
+	eventStorage := inmemory.NewEventStorage(db)
+	joinEventStorage := inmemory.NewJoinEventStorage(db)
 
 	// orgStorage := inmemory.NewOrgStorage(db)
-	// eventStorage := inmemory.NewEventStorage(db)
-	// joinEventStorage := inmemory.NewJoinEventStorage(db)
 
 	userSevice := user.NewSevice(userStorage)
 	authService := auth.New(cache, sender)
-	delivery.Start(cfg.Delivery, userSevice, authService)
+	eventService := event.NewService(eventStorage, joinEventStorage)
+
+	delivery.Start(cfg.Delivery, userSevice, authService, eventService)
 }
