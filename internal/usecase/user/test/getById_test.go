@@ -45,7 +45,7 @@ func TestGetByID(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.title, func(t *testing.T) {
-
+			userStorage := new(mockUserStorage)
 			tc.setupMock(userStorage)
 
 			userSevice := user.NewSevice(userStorage)

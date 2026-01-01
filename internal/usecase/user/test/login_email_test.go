@@ -75,7 +75,7 @@ func TestLoginWithEmail(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-
+			userStorage := new(mockUserStorage)
 			tc.setupMock(userStorage)
 
 			guest := user.NewSevice(userStorage)
