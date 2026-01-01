@@ -22,7 +22,9 @@ type SignupTokenClaims struct {
 	Email string `json:"Email"`
 	jwt.RegisteredClaims
 }
-
+var (
+	ErrInvalidToken = errors.New("invalid token")
+)
 // ------------------------- imp -------------------------
 
 type signupTokenService struct {
@@ -61,7 +63,7 @@ func (s *signupTokenService) Validate(tokenString string) (*SignupTokenClaims, e
 	}
 
 	if !token.Valid {
-		return nil, errors.New("invalid token")
+		return nil, ErrInvalidToken
 	}
 
 	return claims, nil
