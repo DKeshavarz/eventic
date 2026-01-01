@@ -1,9 +1,9 @@
 package auth
 
 import (
-	"log"
 	"net/http"
 
+	"github.com/DKeshavarz/eventic/internal/entity"
 	"github.com/gin-gonic/gin"
 )
 
@@ -35,7 +35,7 @@ func (h *Handler) SignUp(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, ErrorResponse{Error: "مشکلی پیش آمده", Meta: err.Error()})
 		return
 	}
-	log.Println("\n\n\n", claims.Email, "\n\n\n", req.Email)
+
 	if req.Email == nil || claims.Email != *req.Email {
 		c.JSON(http.StatusUnauthorized, ErrorResponse{
 			Error: "مشکلی پیش آمده",
@@ -44,10 +44,39 @@ func (h *Handler) SignUp(c *gin.Context) {
 		return
 	}
 
-	
+	user := &entity.User{
+		Username: req.Username,
+		Password: req.Password,
+		Email:    req.Email,
+		Phone:    req.Phone,
+	}
+
+	newUser, err := h.UserService.Signup(user)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, ErrorResponse{Error: err.Error()})
+		return
+	}
+
+	token, err := h.TokenSevice.Generate(newUser)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, ErrorResponse{
+			Error: "مشکلی پیش آمده",
+			Meta: err.Error(),
+		})
+		return
+	}
+
+	refreshToken, err := h.RefreshTokenService.Generate(newUser)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, ErrorResponse{
+			Error: "مشکلی پیش آمده",
+			Meta: err.Error(),
+		})
+		return
+	}
 
 	c.JSON(http.StatusOK, SignUpResponse{
-		Token: "mt.token",
-		RefreshToken: "te.token",
+		Token:        token,
+		RefreshToken: refreshToken,
 	})
 }

@@ -9,16 +9,18 @@ import (
 
 	"github.com/DKeshavarz/eventic/internal/delivery/web/auth"
 	"github.com/DKeshavarz/eventic/internal/delivery/web/jwt"
+	"github.com/DKeshavarz/eventic/internal/entity"
 	"github.com/DKeshavarz/eventic/pkg/utile"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 )
 
 func TestSignup(t *testing.T) {
 	tests := []struct {
 		tag        string
 		body       auth.SignupRequest
-		setupMocks func(signupTokenService *MockSignupToken)
+		setupMocks func(s *MockSignupToken, u *MockUserService, t *MockJWTService, rf *MockJWTService)
 		wantStatus int
 		wantBody   any
 	}{
@@ -29,7 +31,7 @@ func TestSignup(t *testing.T) {
 				Email: utile.StrPtr("Someone@gmail.com"),
 				Token: "Bad.token",
 			},
-			setupMocks: func(s *MockSignupToken) {
+			setupMocks: func(s *MockSignupToken, u *MockUserService, t *MockJWTService, rf *MockJWTService) {
 				s.On("Validate", "Bad.token").Return(nil, jwt.ErrInvalidToken)
 			},
 			wantStatus: http.StatusUnauthorized,
@@ -40,11 +42,11 @@ func TestSignup(t *testing.T) {
 			body: auth.SignupRequest{
 				Username: "ali", Password: "1234",
 				Email: utile.StrPtr("Someone@gmail.com"),
-				Token: "my.token",
+				Token: "otherguy.token",
 			},
-			setupMocks: func(s *MockSignupToken) {
-				s.On("Validate", "my.token").Return(&jwt.SignupTokenClaims{
-					Email: "Someone@gmail.com",
+			setupMocks: func(s *MockSignupToken, u *MockUserService, t *MockJWTService, rf *MockJWTService) {
+				s.On("Validate", "otherguy.token").Return(&jwt.SignupTokenClaims{
+					Email: "guy@gmail.com",
 				}, nil)
 			},
 			wantStatus: http.StatusUnauthorized,
@@ -60,7 +62,7 @@ func TestSignup(t *testing.T) {
 				Email: nil,
 				Token: "otherguy.token",
 			},
-			setupMocks: func(s *MockSignupToken) {
+			setupMocks: func(s *MockSignupToken, u *MockUserService, t *MockJWTService, rf *MockJWTService) {
 				s.On("Validate", "otherguy.token").Return(&jwt.SignupTokenClaims{
 					Email: "otherguy@gmail.com",
 				}, nil)
@@ -76,17 +78,47 @@ func TestSignup(t *testing.T) {
 			body: auth.SignupRequest{
 				Username: "ali", Password: "1234",
 				Email: utile.StrPtr("Someone@gmail.com"),
-				Token: "otherguy.token",
+				Token: "my.token",
 			},
-			setupMocks: func(s *MockSignupToken) {
-				s.On("Validate", "otherguy.token").Return(&jwt.SignupTokenClaims{
+			setupMocks: func(s *MockSignupToken, u *MockUserService, t *MockJWTService, rf *MockJWTService) {
+				s.On("Validate", "my.token").Return(&jwt.SignupTokenClaims{
 					Email: "Someone@gmail.com",
 				}, nil)
+				u.On("Signup", &entity.User{
+					Username: "ali", Password: "1234",
+					Email: utile.StrPtr("Someone@gmail.com")}).Return(nil, entity.ErrWeakPassword)
 			},
 			wantStatus: http.StatusUnauthorized,
 			wantBody: auth.ErrorResponse{
-				Error: "مشکلی پیش آمده",
-				Meta:  "token doesn't match the credential",
+				Error: entity.ErrWeakPassword.Error(),
+			},
+		},
+		{
+			tag: "Valid",
+			body: auth.SignupRequest{
+				Username: "ali", Password: "pass12345678",
+				Email: utile.StrPtr("Someone@gmail.com"),
+				Token: "my.token",
+			},
+			setupMocks: func(s *MockSignupToken, u *MockUserService, t *MockJWTService, rf *MockJWTService) {
+				s.On("Validate", "my.token").Return(&jwt.SignupTokenClaims{
+					Email: "Someone@gmail.com",
+				}, nil)
+				u.On("Signup", &entity.User{
+					Username: "ali", Password: "pass12345678",
+					Email: utile.StrPtr("Someone@gmail.com"),
+				}).Return(&entity.User{
+					ID:       70,
+					Username: "ali", Password: "pass12345678",
+					Email: utile.StrPtr("Someone@gmail.com"),
+				}, nil)
+				t.On("Generate", mock.Anything).Return("token", nil)
+				rf.On("Generate", mock.Anything).Return("refresh", nil)
+			},
+			wantStatus: http.StatusOK,
+			wantBody: auth.SignUpResponse{
+				Token:        "token",
+				RefreshToken: "refresh",
 			},
 		},
 	}
@@ -94,12 +126,15 @@ func TestSignup(t *testing.T) {
 	for _, tc := range tests {
 		t.Run(tc.tag, func(t *testing.T) {
 
-			tc.setupMocks(signuptoken)
+			tc.setupMocks(signuptoken, userSvc, tokenSvc, refreshSvc)
 
 			server := gin.New()
 			group := server.Group("/auth")
 			h := &auth.Handler{
-				SignupToken: signuptoken,
+				SignupToken:         signuptoken,
+				UserService:         userSvc,
+				TokenSevice:         tokenSvc,
+				RefreshTokenService: refreshSvc,
 			}
 			auth.RegisterRoutes(group, h)
 
