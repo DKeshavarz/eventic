@@ -31,4 +31,5 @@ func RegisterRoutes(group *gin.RouterGroup, h *Handler) {
 	group.POST("/refresh-token", h.RefreshToken)
 	group.POST("/signup-otp-request", h.SendEmailOTP)
 	group.POST("/signup-otp-verify", h.VerifyEmailOTP)
+	group.POST("/signup", h.SignUp)
 }
