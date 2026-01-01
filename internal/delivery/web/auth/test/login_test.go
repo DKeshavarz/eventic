@@ -10,6 +10,7 @@ import (
 	"github.com/DKeshavarz/eventic/internal/delivery/web/auth"
 	"github.com/DKeshavarz/eventic/internal/entity"
 	"github.com/DKeshavarz/eventic/pkg/utile"
+	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -19,7 +20,7 @@ func TestHandler_LoginWithEmail(t *testing.T) {
 		body       auth.LoginWithEmailRequest
 		setupMocks func(userSvc *MockUserService, tokenSvc, refreshSvc *MockJWTService)
 		wantStatus int
-		wantBody   any 
+		wantBody   any
 	}{
 		{
 			name: " valid login",
@@ -52,6 +53,8 @@ func TestHandler_LoginWithEmail(t *testing.T) {
 			}
 
 			// Setup router
+			server := gin.New()
+			group := server.Group("/auth")
 			auth.RegisterRoutes(group, h)
 
 			// Make request
@@ -122,6 +125,8 @@ func TestLoginWithPhone(t *testing.T) {
 			}
 
 			// Setup router
+			server := gin.New()
+			group := server.Group("/auth")
 			auth.RegisterRoutes(group, h)
 
 			// Make request
