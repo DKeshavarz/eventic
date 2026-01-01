@@ -1,17 +1,15 @@
 package usecase
 
 import (
-	"errors"
-	"fmt"
 	"testing"
 
 	"github.com/DKeshavarz/eventic/internal/entity"
 	"github.com/DKeshavarz/eventic/internal/usecase/user"
+	"github.com/DKeshavarz/eventic/pkg/utile"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestSignup(t *testing.T) {
-	fmt.Println("meow")
 	tests := []struct {
 		tag       string
 		user      *entity.User
@@ -26,7 +24,18 @@ func TestSignup(t *testing.T) {
 				Username: "muUser",
 				Password: "pass",
 			},
-			wantErr: errors.New("somthing"),
+			wantErr: entity.ErrWeakPassword,
+		},
+		{
+			tag:       "Valid",
+			user: &entity.User{Username: "Gooduser", Password: "pass12345", Email: utile.StrPtr("dan@gmail.com") },
+			setupMock: func(m *mockUserStorage) {
+				m.On("Create", &entity.User{Username: "Gooduser", Password: "pass12345", Email: utile.StrPtr("dan@gmail.com")}).Return(
+					&entity.User{ID: 1,Username: "Gooduser", Password: "pass12345", Email: utile.StrPtr("dan@gmail.com")},
+					nil)
+			},
+			wantErr: nil,
+			wantUser: &entity.User{ID: 1,Username: "Gooduser", Password: "pass12345", Email: utile.StrPtr("dan@gmail.com")},
 		},
 	}
 
@@ -37,7 +46,7 @@ func TestSignup(t *testing.T) {
 
 			service := user.NewSevice(userStorage)
 			user, err := service.Signup(tc.user)
-			assert.NotNil(t, nil)
+
 			if tc.wantErr != nil {
 				assert.Equal(t, tc.wantErr, err)
 				return

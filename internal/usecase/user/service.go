@@ -44,5 +44,9 @@ func (s *service) GetByID(id int) (*entity.User, error) {
 }
 
 func (s *service) Signup(user *entity.User) (*entity.User, error) {
-	return nil, nil
+	if err := user.Validate(); err != nil {
+		return nil, err
+	}
+
+ 	return s.userStorage.Create(user)
 }
