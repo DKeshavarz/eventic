@@ -19,14 +19,14 @@ func TestGetByID(t *testing.T) {
 	testCases := []struct {
 		title     string
 		id        int
-		setupMock func(m *userStorage)
+		setupMock func(m *mockUserStorage)
 		wantErr   error
 		wantUser  *entity.User
 	}{
 		{
 			title: "Existing user",
 			id:    57,
-			setupMock: func(m *userStorage) {
+			setupMock: func(m *mockUserStorage) {
 				m.On("GetByID", 57).Return(UserWithID57, nil)
 			},
 			wantErr:  nil,
@@ -35,7 +35,7 @@ func TestGetByID(t *testing.T) {
 		{
 			title: "Non existing user",
 			id:    65,
-			setupMock: func(m *userStorage) {
+			setupMock: func(m *mockUserStorage) {
 				m.On("GetByID", 65).Return(&entity.User{}, repositories.ErrEventNotFound)
 			},
 			wantErr:  repositories.ErrEventNotFound,
@@ -45,8 +45,6 @@ func TestGetByID(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.title, func(t *testing.T) {
-
-			userStorage := new(userStorage)
 
 			tc.setupMock(userStorage)
 

@@ -13,7 +13,7 @@ func TestLoginWithEmail(t *testing.T) {
 		name      string
 		email     string
 		password  string
-		setupMock func(m *userStorage)
+		setupMock func(m *mockUserStorage)
 		wantErr   error
 		wantUser  *entity.User
 	}{
@@ -21,7 +21,7 @@ func TestLoginWithEmail(t *testing.T) {
 			name: "valid email and password",
 			email: "danny@gmail.com",
 			password: "1234",
-			setupMock: func(m *userStorage) {
+			setupMock: func(m *mockUserStorage) {
 				m.On("GetUserByEmail", "danny@gmail.com").Return(&entity.User{
 					ID:       1,
 					Email:    strPtr("danny@gmail.com"),
@@ -39,7 +39,7 @@ func TestLoginWithEmail(t *testing.T) {
 			name: "invalid email",
 			email: "dann.y@gmail.com",
 			password: "1234",
-			setupMock: func(m *userStorage) {
+			setupMock: func(m *mockUserStorage) {
 				m.On("GetUserByEmail", "danny").Return(nil, nil)
 			},
 			wantErr:  user.ErrInvalidEmail,
@@ -49,7 +49,7 @@ func TestLoginWithEmail(t *testing.T) {
 			name: "invalid password",
 			email: "danny@gmail.com",
 			password: "1234",
-			setupMock: func(m *userStorage) {
+			setupMock: func(m *mockUserStorage) {
 				m.On("GetUserByEmail", "danny@gmail.com").Return(&entity.User{
 					ID:       1,
 					Email:    strPtr("danny@gmail.com"),
@@ -63,7 +63,7 @@ func TestLoginWithEmail(t *testing.T) {
 			name: "not found user",
 			email: "danny@gmail.com",
 			password: "1234",
-			setupMock: func(m *userStorage) {
+			setupMock: func(m *mockUserStorage) {
 				m.On("GetUserByEmail", "danny@gmail.com").Return(&entity.User{},
 					user.ErrUserNotFound,
 				)
@@ -75,8 +75,6 @@ func TestLoginWithEmail(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-
-			userStorage := new(userStorage)
 
 			tc.setupMock(userStorage)
 
