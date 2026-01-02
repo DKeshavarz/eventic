@@ -21,7 +21,6 @@ FROM alpine:latest
 WORKDIR /app
 
 COPY --from=builder /app/eventic .
-COPY --from=builder /app/uploads ./uploads
 
 EXPOSE 8080
 
