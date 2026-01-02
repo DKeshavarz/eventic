@@ -11,8 +11,8 @@ const (
 )
 
 func Register(group *gin.RouterGroup) {
-	os.MkdirAll("./uploads", 0755)
+	os.MkdirAll("./static/upload", 0755)
 
-	group.Static("/uploads", "./uploads")
+	group.Static("/upload", "./static/upload")
 	group.POST("/upload", uploadImage)
 }

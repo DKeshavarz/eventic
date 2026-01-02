@@ -32,7 +32,7 @@ func uploadImage(c *gin.Context) {
 
 	// generate unique filename: timestamp + original name
 	filename := fmt.Sprintf("%d_%s", time.Now().UnixNano(), filepath.Base(file.Filename))
-	filePath := filepath.Join("uploads", filename)
+	filePath := filepath.Join("static/upload", filename)
 
 	// Save file
 	if err := c.SaveUploadedFile(file, filePath); err != nil {
@@ -40,5 +40,5 @@ func uploadImage(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, UploadImageResponse{URL: "/static/" + filePath})
+	c.JSON(http.StatusOK, UploadImageResponse{URL: filePath})
 }
