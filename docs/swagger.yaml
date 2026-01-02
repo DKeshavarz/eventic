@@ -48,6 +48,29 @@ definitions:
       success:
         type: boolean
     type: object
+  auth.SignUpResponse:
+    properties:
+      refresh_token:
+        type: string
+      token:
+        type: string
+    type: object
+  auth.SignupRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+      phone:
+        type: string
+      token:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
   auth.VerifyEmailOTPRequest:
     properties:
       code:
@@ -266,6 +289,36 @@ paths:
           schema:
             $ref: '#/definitions/auth.ErrorResponse'
       summary: Refresh JWT token
+      tags:
+      - Auth
+  /signup:
+    post:
+      consumes:
+      - application/json
+      description: Registers a new user in the system after validating a signup token
+      parameters:
+      - description: Signup Request Data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/auth.SignupRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/auth.SignUpResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/auth.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/auth.ErrorResponse'
+      summary: User Signup
       tags:
       - Auth
   /signup-otp-request:

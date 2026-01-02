@@ -20,6 +20,17 @@ type SignUpResponse struct {
 	RefreshToken string `json:"refresh_token"`
 }
 
+// SignUp godoc
+// @Summary      User Signup
+// @Description  Registers a new user in the system after validating a signup token
+// @Tags         Auth
+// @Accept       json
+// @Produce      json
+// @Param        request body SignupRequest true "Signup Request Data"
+// @Success      200 {object} SignUpResponse
+// @Failure      400 {object} ErrorResponse
+// @Failure      401 {object} ErrorResponse
+// @Router       /signup [post]
 func (h *Handler) SignUp(c *gin.Context) {
 	var req SignupRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
