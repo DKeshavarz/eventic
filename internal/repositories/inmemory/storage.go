@@ -38,8 +38,7 @@ func DefaultDB() *DB {
 			ID:       1,
 			Username: "Danny",
 			Password: "1234",
-			Email:    utile.StrPtr("dankeshavarz1075@gmail.com"),
-			Phone:    utile.StrPtr("09398113791"),
+			Email:    utile.StrPtr("dan@gmail.com"),
 		},
 	}
 	currTime := time.Now()
@@ -57,7 +56,6 @@ func DefaultDB() *DB {
 			توی این دوره بهت یاد می دیم که چطور به خواب ابدی فرو بری و دیگه لازم نیست نگران هیچ تکلیفی باشی.
 			`,
 			Location: utile.StrPtr("سلف مرکزی"),
-			PosterPic: utile.StrPtr("/static/uploads/image.png"),
 		},
 	}
 	organizations := make(map[int]*entity.Organization)
