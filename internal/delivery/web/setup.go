@@ -23,7 +23,7 @@ import (
 )
 
 // @title                      Eventic
-// @version                    0.3.0
+// @version                    0.6.2
 // @description                A platform to hold and participate in events
 // @termsOfService             http://swagger.io/terms/
 // @contact.name               Eventic Dev Team
