@@ -8,6 +8,7 @@ import (
 	"github.com/DKeshavarz/eventic/internal/repositories/inmemory"
 	"github.com/DKeshavarz/eventic/internal/usecase/auth"
 	"github.com/DKeshavarz/eventic/internal/usecase/event"
+	"github.com/DKeshavarz/eventic/internal/usecase/organization"
 	"github.com/DKeshavarz/eventic/internal/usecase/user"
 )
 
@@ -20,12 +21,12 @@ func main() {
 	userStorage := inmemory.NewUserStorage(db)
 	eventStorage := inmemory.NewEventStorage(db)
 	joinEventStorage := inmemory.NewJoinEventStorage(db)
-
-	// orgStorage := inmemory.NewOrgStorage(db)
+	orgStorage := inmemory.NewOrgStorage(db)
 
 	userSevice := user.NewSevice(userStorage)
 	authService := auth.New(cache, sender)
 	eventService := event.NewService(eventStorage, joinEventStorage)
+	orgSevice := organization.NewService(orgStorage)
 
-	delivery.Start(cfg.Delivery, userSevice, authService, eventService)
+	delivery.Start(cfg.Delivery, userSevice, authService, eventService, orgSevice)
 }
