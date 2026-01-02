@@ -8,11 +8,21 @@ import (
 )
 
 type CreateOrgRequest struct {
-	org *entity.Organization
+	Name        string  `json:"name" example:"TechMeet"`
+	Description string  `json:"description" example:"Organization for tech events"`
+	LogoPic     *string `json:"logo_pic,omitempty" example:"https://example.com/logo.png"`
+	Email       *string `json:"email,omitempty" example:"info@company.com"`
+	Phone       *string `json:"phone,omitempty" example:"+1234567890"`
 }
 
 type CreateOrgResponse struct {
-	org *entity.Organization
+	OrganizerID int     `json:"organizer_id" example:"1"`
+	OwnerID     int     `json:"owner_id" example:"42"`
+	Name        string  `json:"name" example:"TechMeet"`
+	Description string  `json:"description" example:"Organization for tech events"`
+	LogoPic     *string `json:"logo_pic,omitempty" example:"https://example.com/logo.png"`
+	Email       *string `json:"email,omitempty" example:"info@company.com"`
+	Phone       *string `json:"phone,omitempty" example:"+1234567890"`
 }
 
 // CreateOrganization godoc
@@ -22,6 +32,7 @@ type CreateOrgResponse struct {
 // @Accept json
 // @Produce json
 // @Param organization body CreateOrgRequest true "Organization data"
+// @Security    BearerAuth
 // @Success 201 {object} CreateOrgResponse
 // @Failure 400 {object} ErrorResponse"Bad request"
 // @Failure 500 {object} ErrorResponse"Internal server error"
@@ -38,24 +49,40 @@ func (h *Handler) Create(c *gin.Context) {
 	strUserID, ok := c.Get("userID")
 	if !ok {
 		c.JSON(http.StatusInternalServerError, DefaultErr("user Id it token is missed"))
+		return
 	}
 
-	userID, ok := strUserID.(int) 
+	userID, ok := strUserID.(int)
 	if !ok {
 		c.JSON(http.StatusInternalServerError, DefaultErr("Can't cast user userID to int"))
+		return
 	}
-	
-	
+
 	// Create by uscases
-	req.org.OwnerID = userID
-	org ,err := h.orgSevice.Create(req.org)
-	if  err != nil {
+
+	//TODO: save image
+	org, err := h.orgSevice.Create(&entity.Organization{
+		OwnerID: userID,
+		Name: req.Name,
+		Description: req.Description,
+		Email: req.Email,
+		Phone: req.Phone,
+	})
+	if err != nil {
 		c.JSON(http.StatusInternalServerError, DefaultErr(err.Error()))
 		return
 	}
 
 	// Return resault
 	c.JSON(http.StatusCreated, CreateOrgResponse{
-		org: org,
+		OrganizerID: org.ID,
+		OwnerID: org.OwnerID,
+		Name: org.Name,
+		Description: org.Description,
+		LogoPic: org.LogoPic,
+		Email: org.Email,
+		Phone: org.Phone,
 	})
 }
+
+// -------------------- Helpers -------------

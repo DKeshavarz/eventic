@@ -1,6 +1,8 @@
 package organization
 
 import (
+	"github.com/DKeshavarz/eventic/internal/delivery/web/jwt"
+	"github.com/DKeshavarz/eventic/internal/delivery/web/middelware"
 	"github.com/DKeshavarz/eventic/internal/usecase/organization"
 	"github.com/gin-gonic/gin"
 )
@@ -15,7 +17,8 @@ func NewHandler(orgSvc organization.Service) *Handler {
 	}
 }
 
-func RegisterRoutes(group *gin.RouterGroup, h *Handler) {
+func RegisterRoutes(group *gin.RouterGroup, h *Handler, accessToken jwt.AccessTokenService) {
+	group.Use(middelware.Auth(accessToken))
 	group.POST("/", h.Create)
 }
 
