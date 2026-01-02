@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/DKeshavarz/eventic/internal/entity"
+	"github.com/DKeshavarz/eventic/pkg/utile"
 	"github.com/gin-gonic/gin"
 )
 
@@ -59,14 +60,18 @@ func (h *Handler) Create(c *gin.Context) {
 	}
 
 	// Create by uscases
+	if exsit := utile.FileExists(*req.LogoPic); !exsit {
+		c.JSON(http.StatusBadRequest, DefaultErr("files doesnt exist"))
+		return
+	}
 
-	//TODO: save image
 	org, err := h.orgSevice.Create(&entity.Organization{
-		OwnerID: userID,
-		Name: req.Name,
+		OwnerID:     userID,
+		Name:        req.Name,
 		Description: req.Description,
-		Email: req.Email,
-		Phone: req.Phone,
+		Email:       req.Email,
+		Phone:       req.Phone,
+		LogoPic:     req.LogoPic,
 	})
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, DefaultErr(err.Error()))
@@ -76,12 +81,12 @@ func (h *Handler) Create(c *gin.Context) {
 	// Return resault
 	c.JSON(http.StatusCreated, CreateOrgResponse{
 		OrganizerID: org.ID,
-		OwnerID: org.OwnerID,
-		Name: org.Name,
+		OwnerID:     org.OwnerID,
+		Name:        org.Name,
 		Description: org.Description,
-		LogoPic: org.LogoPic,
-		Email: org.Email,
-		Phone: org.Phone,
+		LogoPic:     org.LogoPic,
+		Email:       org.Email,
+		Phone:       org.Phone,
 	})
 }
 
