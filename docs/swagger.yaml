@@ -48,6 +48,29 @@ definitions:
       success:
         type: boolean
     type: object
+  auth.SignUpResponse:
+    properties:
+      refresh_token:
+        type: string
+      token:
+        type: string
+    type: object
+  auth.SignupRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+      phone:
+        type: string
+      token:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
   auth.VerifyEmailOTPRequest:
     properties:
       code:
@@ -109,6 +132,61 @@ definitions:
     properties:
       event:
         $ref: '#/definitions/entity.Event'
+    type: object
+  organization.CreateOrgRequest:
+    properties:
+      description:
+        example: Organization for tech events
+        type: string
+      email:
+        example: info@company.com
+        type: string
+      logo_pic:
+        example: https://example.com/logo.png
+        type: string
+      name:
+        example: TechMeet
+        type: string
+      phone:
+        example: "+1234567890"
+        type: string
+    type: object
+  organization.CreateOrgResponse:
+    properties:
+      description:
+        example: Organization for tech events
+        type: string
+      email:
+        example: info@company.com
+        type: string
+      logo_pic:
+        example: https://example.com/logo.png
+        type: string
+      name:
+        example: TechMeet
+        type: string
+      organizer_id:
+        example: 1
+        type: integer
+      owner_id:
+        example: 42
+        type: integer
+      phone:
+        example: "+1234567890"
+        type: string
+    type: object
+  organization.ErrorResponse:
+    properties:
+      error:
+        type: string
+      meta:
+        type: string
+    type: object
+  statics.UploadImageResponse:
+    properties:
+      url:
+        example: http://localhost:8080/uploads/image123.png
+        type: string
     type: object
 info:
   contact:
@@ -238,6 +316,38 @@ paths:
       summary: Login a user with Phone
       tags:
       - Auth
+  /organization/:
+    post:
+      consumes:
+      - application/json
+      description: Creates a new organization for the authenticated user
+      parameters:
+      - description: Organization data
+        in: body
+        name: organization
+        required: true
+        schema:
+          $ref: '#/definitions/organization.CreateOrgRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/organization.CreateOrgResponse'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/organization.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/organization.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Create new organization
+      tags:
+      - organization
   /refresh-token:
     post:
       consumes:
@@ -266,6 +376,36 @@ paths:
           schema:
             $ref: '#/definitions/auth.ErrorResponse'
       summary: Refresh JWT token
+      tags:
+      - Auth
+  /signup:
+    post:
+      consumes:
+      - application/json
+      description: Registers a new user in the system after validating a signup token
+      parameters:
+      - description: Signup Request Data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/auth.SignupRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/auth.SignUpResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/auth.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/auth.ErrorResponse'
+      summary: User Signup
       tags:
       - Auth
   /signup-otp-request:
@@ -328,6 +468,33 @@ paths:
       summary: Validate otp for a user
       tags:
       - Auth
+  /static/upload:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Uploads a picture and returns its public URL
+      parameters:
+      - description: Image file
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/statics.UploadImageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Upload an image
+      tags:
+      - files
 securityDefinitions:
   BearerAuth:
     description: 'Type `Bearer ` followed by your JWT token. example: "Bearer abcde12345"'

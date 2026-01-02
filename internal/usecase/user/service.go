@@ -42,3 +42,11 @@ func (s *service) LoginWithPhone(phone, password string) (*entity.User, error) {
 func (s *service) GetByID(id int) (*entity.User, error) {
 	return s.userStorage.GetByID(id)
 }
+
+func (s *service) Signup(user *entity.User) (*entity.User, error) {
+	if err := user.Validate(); err != nil {
+		return nil, err
+	}
+
+ 	return s.userStorage.Create(user)
+}

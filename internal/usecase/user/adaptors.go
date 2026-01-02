@@ -11,6 +11,7 @@ type Service interface {
 	LoginWithEmail(email, password string) (*entity.User, error)
 	LoginWithPhone(phone, password string) (*entity.User, error)
 	GetByID(id int) (*entity.User, error)
+	Signup(*entity.User) (*entity.User, error)
 }
 
 var (

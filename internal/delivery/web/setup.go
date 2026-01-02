@@ -8,10 +8,12 @@ import (
 	"github.com/DKeshavarz/eventic/internal/delivery/web/auth"
 	"github.com/DKeshavarz/eventic/internal/delivery/web/event"
 	"github.com/DKeshavarz/eventic/internal/delivery/web/jwt"
+	"github.com/DKeshavarz/eventic/internal/delivery/web/organization"
 	"github.com/DKeshavarz/eventic/internal/delivery/web/statics"
 
 	usecasAuth "github.com/DKeshavarz/eventic/internal/usecase/auth"
 	usecaseEvent "github.com/DKeshavarz/eventic/internal/usecase/event"
+	usecaseOrg "github.com/DKeshavarz/eventic/internal/usecase/organization"
 
 	"github.com/DKeshavarz/eventic/internal/usecase/user"
 	"github.com/gin-contrib/cors"
@@ -30,7 +32,7 @@ import (
 // @in                         header
 // @name                       Authorization
 // @description                Type `Bearer ` followed by your JWT token. example: "Bearer abcde12345"
-func Start(cfg *Config, userService user.Service, eventSevice usecaseEvent.Service, authService usecasAuth.Service) error {
+func Start(cfg *Config, userService user.Service, eventSevice usecaseEvent.Service, authService usecasAuth.Service, orgSvc usecaseOrg.Service) error {
 	
 	server := gin.Default()
 	corsConfig := cors.Config{
@@ -58,6 +60,9 @@ func Start(cfg *Config, userService user.Service, eventSevice usecaseEvent.Servi
 
 	eventHandler := event.NewHandler(eventSevice)
 	event.RegisterRoutes(server.Group("/event"), eventHandler)
+
+	organizationHandler := organization.NewHandler(orgSvc)
+	organization.RegisterRoutes(server.Group("/organization"), organizationHandler, token)
 
 	statics.Register(server.Group("/static"))
 	return server.Run(":" + cfg.Port)

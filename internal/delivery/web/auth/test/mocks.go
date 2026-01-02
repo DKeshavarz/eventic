@@ -6,6 +6,7 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
+// ------------------------- user sevice ----------------------------
 type MockUserService struct {
 	mock.Mock
 }
@@ -32,7 +33,15 @@ func (m *MockUserService) GetByID(id int) (*entity.User, error) {
 	}
 	return args.Get(0).(*entity.User), args.Error(1)
 }
+func (m *MockUserService) Signup(user *entity.User) (*entity.User, error) {
+	args := m.Called(user)
+	if args.Get(0) == nil {
+		return nil, args.Error(1)
+	}
+	return args.Get(0).(*entity.User), args.Error(1)
+}
 
+// ------------------------- JWT service ----------------------------
 type MockJWTService struct {
 	mock.Mock
 }
@@ -44,4 +53,22 @@ func (m *MockJWTService) Generate(user *entity.User) (string, error) {
 
 func (m *MockJWTService) Validate(tokenString string) (*jwt.AccessTokenClaims, error) {
 	return nil, nil
+}
+
+// ------------------------- Signup Token service ----------------------------
+type MockSignupToken struct {
+	mock.Mock
+}
+
+func (m *MockSignupToken) Generate(email string) (string, error) {
+	args := m.Called(email)
+	return args.String(0), args.Error(1)
+}
+
+func (m *MockSignupToken) Validate(tokenString string) (*jwt.SignupTokenClaims, error) {
+	args := m.Called(tokenString)
+	if args.Get(0) == nil {
+		return nil, args.Error(1)
+	}
+	return args.Get(0).(*jwt.SignupTokenClaims), args.Error(1)
 }
