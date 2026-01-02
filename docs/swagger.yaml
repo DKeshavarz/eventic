@@ -133,6 +133,55 @@ definitions:
       event:
         $ref: '#/definitions/entity.Event'
     type: object
+  organization.CreateOrgRequest:
+    properties:
+      description:
+        example: Organization for tech events
+        type: string
+      email:
+        example: info@company.com
+        type: string
+      logo_pic:
+        example: https://example.com/logo.png
+        type: string
+      name:
+        example: TechMeet
+        type: string
+      phone:
+        example: "+1234567890"
+        type: string
+    type: object
+  organization.CreateOrgResponse:
+    properties:
+      description:
+        example: Organization for tech events
+        type: string
+      email:
+        example: info@company.com
+        type: string
+      logo_pic:
+        example: https://example.com/logo.png
+        type: string
+      name:
+        example: TechMeet
+        type: string
+      organizer_id:
+        example: 1
+        type: integer
+      owner_id:
+        example: 42
+        type: integer
+      phone:
+        example: "+1234567890"
+        type: string
+    type: object
+  organization.ErrorResponse:
+    properties:
+      error:
+        type: string
+      meta:
+        type: string
+    type: object
 info:
   contact:
     name: Eventic Dev Team
@@ -261,6 +310,38 @@ paths:
       summary: Login a user with Phone
       tags:
       - Auth
+  /organization/:
+    post:
+      consumes:
+      - application/json
+      description: Creates a new organization for the authenticated user
+      parameters:
+      - description: Organization data
+        in: body
+        name: organization
+        required: true
+        schema:
+          $ref: '#/definitions/organization.CreateOrgRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/organization.CreateOrgResponse'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/organization.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/organization.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Create new organization
+      tags:
+      - organization
   /refresh-token:
     post:
       consumes:
