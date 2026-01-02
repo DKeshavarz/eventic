@@ -431,6 +431,47 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/static/upload": {
+            "post": {
+                "description": "Uploads a picture and returns its public URL",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "files"
+                ],
+                "summary": "Upload an image",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "Image file",
+                        "name": "file",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/statics.UploadImageResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -710,6 +751,15 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
+        },
+        "statics.UploadImageResponse": {
+            "type": "object",
+            "properties": {
+                "url": {
+                    "type": "string",
+                    "example": "http://localhost:8080/uploads/image123.png"
+                }
+            }
         }
     },
     "securityDefinitions": {
@@ -732,6 +782,8 @@ var SwaggerInfo = &swag.Spec{
 	Description:      "A platform to hold and participate in events",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
+	LeftDelim:        "{{",
+	RightDelim:       "}}",
 }
 
 func init() {
