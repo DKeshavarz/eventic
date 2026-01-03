@@ -35,3 +35,23 @@ func (e *mockEventStorage) GetAll() ([]*entity.Event, error) {
 	args := e.Called()
 	return args.Get(0).([]*entity.Event), args.Error(1)
 }
+
+// ---------------------------------------------
+type mockOrganizionStorage struct {
+	mock.Mock
+}
+
+func (m *mockOrganizionStorage) Create(org *entity.Organization) (*entity.Organization, error) {
+	args := m.Called(org)
+	return args.Get(0).(*entity.Organization), args.Error(1)
+}
+
+func (m *mockOrganizionStorage) GetByID(id int) (*entity.Organization, error) {
+	args := m.Called(id)
+	return args.Get(0).(*entity.Organization), args.Error(1)
+}
+
+func (m *mockOrganizionStorage) GetByOwnerID(id int) ([]*entity.Organization, error) {
+	args := m.Called(id)
+	return args.Get(0).([]*entity.Organization), args.Error(1)
+}

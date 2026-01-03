@@ -68,8 +68,9 @@ func TestGet(t *testing.T) {
 			eventStorage := new(mockEventStorage)
 			tc.setupMock(eventStorage)
 			joinEventStorage := new(mockJoinEventStorage)
+			OrgStorage := new(mockOrganizionStorage)
 
-			service := event.NewService(eventStorage, joinEventStorage)
+			service := event.NewService(eventStorage, joinEventStorage, OrgStorage)
 			events, err := service.Get(tc.id)
 			if tc.wantErr != nil {
 				assert.Equal(t, tc.wantErr, err)

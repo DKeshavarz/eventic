@@ -4,7 +4,7 @@ import (
 	"github.com/DKeshavarz/eventic/internal/entity"
 )
 
-func (s *service) Create(event *entity.Event) (*entity.Event, error) {
+func (s *service) Create(userID int,event *entity.Event) (*entity.Event, error) {
 	if err := event.Validate(); err != nil {
 		return nil, err
 	}

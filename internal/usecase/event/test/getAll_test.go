@@ -52,10 +52,11 @@ func TestGetAll(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.tag, func(t *testing.T) {
 			eventStorage := new(mockEventStorage)
+			OrgStorage := new(mockOrganizionStorage)
 			tc.setupMock(eventStorage)
 			joinEventStorage := new(mockJoinEventStorage)
 
-			service := event.NewService(eventStorage, joinEventStorage)
+			service := event.NewService(eventStorage, joinEventStorage, OrgStorage)
 			events, err := service.GetAll()
 
 			if tc.wantErr != nil {
