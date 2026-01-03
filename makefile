@@ -25,7 +25,7 @@ build: clean compile
 
 
 test: ## Run tests
-	go test -v $(PKG)
+	go test $(PKG)
 
 dep: ## Download and vendor dependencies
 	go mod tidy
