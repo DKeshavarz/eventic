@@ -61,7 +61,7 @@ func Start(cfg *Config, userService user.Service, eventSevice usecaseEvent.Servi
 	eventHandler := event.NewHandler(eventSevice)
 	event.RegisterRoutes(server.Group("/event"), eventHandler)
 
-	organizationHandler := organization.NewHandler(orgSvc)
+	organizationHandler := organization.NewHandler(orgSvc, eventSevice)
 	organization.RegisterRoutes(server.Group("/organization"), organizationHandler, token)
 
 	statics.Register(server.Group("/static"))
