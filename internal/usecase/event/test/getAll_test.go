@@ -27,13 +27,13 @@ func TestGetAll(t *testing.T) {
 
 	testCases := []struct {
 		tag       string
-		setupMock func(m *eventStorage)
+		setupMock func(m *mockEventStorage)
 		wantEvent []*entity.Event
 		wantErr   error
 	}{
 		{
 			tag: "Valid GetAll with nothing",
-			setupMock: func(m *eventStorage) {
+			setupMock: func(m *mockEventStorage) {
 				m.On("GetAll").Return([]*entity.Event{}, nil)
 			},
 			wantEvent: []*entity.Event{},
@@ -41,7 +41,7 @@ func TestGetAll(t *testing.T) {
 		},
 		{
 			tag: "Valid GetAll with somthig",
-			setupMock: func(m *eventStorage) {
+			setupMock: func(m *mockEventStorage) {
 				m.On("GetAll").Return(events, nil)
 			},
 			wantEvent: events,
@@ -51,9 +51,9 @@ func TestGetAll(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.tag, func(t *testing.T) {
-			eventStorage := new(eventStorage)
+			eventStorage := new(mockEventStorage)
 			tc.setupMock(eventStorage)
-			joinEventStorage := new(joinEventStorage)
+			joinEventStorage := new(mockJoinEventStorage)
 
 			service := event.NewService(eventStorage, joinEventStorage)
 			events, err := service.GetAll()

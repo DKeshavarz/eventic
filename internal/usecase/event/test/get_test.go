@@ -30,14 +30,14 @@ func TestGet(t *testing.T) {
 	testCases := []struct {
 		tag       string
 		id        int
-		setupMock func(m *eventStorage)
+		setupMock func(m *mockEventStorage)
 		wantEvent *entity.Event
 		wantErr   error
 	}{
 		{
 			tag: "Want existing event with id 5",
 			id:  5,
-			setupMock: func(m *eventStorage) {
+			setupMock: func(m *mockEventStorage) {
 				m.On("GetByID", 5).Return(event1, nil)
 			},
 			wantEvent: event1,
@@ -46,7 +46,7 @@ func TestGet(t *testing.T) {
 		{
 			tag: "Want existing event with id 7",
 			id:  7,
-			setupMock: func(m *eventStorage) {
+			setupMock: func(m *mockEventStorage) {
 				m.On("GetByID", 7).Return(event2, nil)
 			},
 			wantEvent: event2,
@@ -55,7 +55,7 @@ func TestGet(t *testing.T) {
 		{
 			tag: "Want non-existing event",
 			id:  70,
-			setupMock: func(m *eventStorage) {
+			setupMock: func(m *mockEventStorage) {
 				m.On("GetByID", 70).Return(new(entity.Event), repositories.ErrEventNotFound)
 			},
 			wantEvent: nil,
@@ -65,9 +65,9 @@ func TestGet(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.tag, func(t *testing.T) {
-			eventStorage := new(eventStorage)
+			eventStorage := new(mockEventStorage)
 			tc.setupMock(eventStorage)
-			joinEventStorage := new(joinEventStorage)
+			joinEventStorage := new(mockJoinEventStorage)
 
 			service := event.NewService(eventStorage, joinEventStorage)
 			events, err := service.Get(tc.id)

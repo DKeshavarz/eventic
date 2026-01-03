@@ -10,28 +10,24 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
-type eventStorage struct {
-	mock.Mock
-}
-
 func TestCreateEvent(t *testing.T) {
 	curTime := time.Now()
 	testCases := []struct {
 		name      string
 		event     *entity.Event
-		setupMock func(m *eventStorage)
+		setupMock func(m *mockEventStorage)
 		wantEvent *entity.Event
 		wantErr   error
 	}{
 		{
 			name: "valid event",
 			event: &entity.Event{
-				Title:    "test",
-				Cost:     100,
-				DateTime: curTime.Add(12 * time.Hour),
+				Title:       "test",
+				Cost:        100,
+				DateTime:    curTime.Add(12 * time.Hour),
 				Description: "some thing...",
 			},
-			setupMock: func(m *eventStorage) {
+			setupMock: func(m *mockEventStorage) {
 				m.On("Create", mock.Anything).Return(&entity.Event{
 					ID:          1,
 					Title:       "test",
@@ -52,37 +48,37 @@ func TestCreateEvent(t *testing.T) {
 		{
 			name: "invalid event - lost title",
 			event: &entity.Event{
-				Title:    "",
-				Cost:     100,
+				Title:       "",
+				Cost:        100,
 				Description: "some thing...",
-				DateTime: curTime.Add(12 * time.Hour),
+				DateTime:    curTime.Add(12 * time.Hour),
 			},
-			setupMock: func(m *eventStorage) {
+			setupMock: func(m *mockEventStorage) {
 				m.On("Create", mock.Anything).Return(&entity.Event{}, nil)
 			},
 			wantEvent: &entity.Event{},
-			wantErr: entity.ErrInvalidTitle,
+			wantErr:   entity.ErrInvalidTitle,
 		},
 		{
 			name: "invalid event - negetive cost",
 			event: &entity.Event{
-				Title:    "title",
-				Cost:     -50,
+				Title:       "title",
+				Cost:        -50,
 				Description: "some thing...",
-				DateTime: curTime.Add(12 * time.Hour),
+				DateTime:    curTime.Add(12 * time.Hour),
 			},
-			setupMock: func(m *eventStorage) {
+			setupMock: func(m *mockEventStorage) {
 				m.On("Create", mock.Anything).Return(&entity.Event{}, nil)
 			},
 			wantEvent: &entity.Event{},
-			wantErr: entity.ErrInvalidCost,
+			wantErr:   entity.ErrInvalidCost,
 		},
 	}
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			eventStorage := &eventStorage{}
-			joinEventStorage := new(joinEventStorage)
+			eventStorage := new(mockEventStorage)
+			joinEventStorage := new(mockJoinEventStorage)
 			tc.setupMock(eventStorage)
 			service := event.NewService(eventStorage, joinEventStorage)
 			event, err := service.Create(tc.event)
@@ -95,24 +91,3 @@ func TestCreateEvent(t *testing.T) {
 		})
 	}
 }
-
-
-// -------------- helpers ----------------------
-func (e *eventStorage) Create(event *entity.Event) (*entity.Event, error) {
-	args := e.Called(event)
-	return args.Get(0).(*entity.Event), args.Error(1)
-}
-
-func (e *eventStorage) GetByID(id int) (*entity.Event, error) {
-	args := e.Called(id)
-	return args.Get(0).(*entity.Event), args.Error(1)
-}
-func (e *eventStorage) GetAll() ([]*entity.Event, error) {
-	args := e.Called()
-	return args.Get(0).([]*entity.Event), args.Error(1)
-}
-func (e *joinEventStorage) GetByUserID(id int) ([]*entity.JoinEvent, error) {
-	args := e.Called(id)
-	return args.Get(0).([]*entity.JoinEvent), args.Error(1)
-}
-

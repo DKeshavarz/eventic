@@ -9,15 +9,12 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
-type joinEventStorage struct {
-	mock.Mock
-}
 
 func TestJoinEvent(t *testing.T) {
 	testCases := []struct {
 		name          string
 		joinEvent     *entity.JoinEvent
-		setupMock     func(m *joinEventStorage)
+		setupMock     func(m *mockJoinEventStorage)
 		wantErr       error
 		wantJoinEvent *entity.JoinEvent
 	}{
@@ -27,7 +24,7 @@ func TestJoinEvent(t *testing.T) {
 				UserID: 12,
 				EventID: 50,
 			},
-			setupMock: func(m *joinEventStorage) {
+			setupMock: func(m *mockJoinEventStorage) {
 				m.On("Create", mock.Anything).Return(&entity.JoinEvent{
 					UserID: 12,
 					EventID: 50,
@@ -45,7 +42,7 @@ func TestJoinEvent(t *testing.T) {
 				UserID: 10,
 				EventID: 51,
 			},
-			setupMock: func(m *joinEventStorage) {
+			setupMock: func(m *mockJoinEventStorage) {
 				m.On("Create", mock.Anything).Return(&entity.JoinEvent{}, event.ErrInvalidUser)
 			},
 			wantErr: event.ErrInvalidUser,
@@ -57,7 +54,7 @@ func TestJoinEvent(t *testing.T) {
 				UserID: 10,
 				EventID: 510,
 			},
-			setupMock: func(m *joinEventStorage) {
+			setupMock: func(m *mockJoinEventStorage) {
 				m.On("Create", mock.Anything).Return(&entity.JoinEvent{}, event.ErrInvalidEvent)
 			},
 			wantErr: event.ErrInvalidEvent,
@@ -67,8 +64,8 @@ func TestJoinEvent(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			eventStorage := &eventStorage{}
-			joinEventStorage := new(joinEventStorage)
+			eventStorage := new(mockEventStorage)
+			joinEventStorage := new(mockJoinEventStorage)
 			tc.setupMock(joinEventStorage)
 
 			service := event.NewService(eventStorage, joinEventStorage)
@@ -86,7 +83,7 @@ func TestJoinEvent(t *testing.T) {
 }
 
 // -------------- helpers ----------------------
-func (e *joinEventStorage) Create(org *entity.JoinEvent) (*entity.JoinEvent, error) {
+func (e *mockJoinEventStorage) Create(org *entity.JoinEvent) (*entity.JoinEvent, error) {
 	args := e.Called(org)
 	return args.Get(0).(*entity.JoinEvent), args.Error(1)
 }
