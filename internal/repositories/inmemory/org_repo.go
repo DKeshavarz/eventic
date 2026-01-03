@@ -35,3 +35,7 @@ func (s *OrgStorage) Create(org *entity.Organization) (*entity.Organization, err
 
 	return org, nil
 }
+
+func (s *OrgStorage) GetByOwnerID(id int) ([]*entity.Organization, error) {
+	return nil, nil
+}

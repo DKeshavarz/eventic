@@ -21,6 +21,7 @@ type User interface {
 
 type Organization interface {
 	GetByID(id int) (*entity.Organization, error)
+	GetByOwnerID(id int) ([]*entity.Organization, error)
 	Create(org *entity.Organization) (*entity.Organization, error)
 }
 
