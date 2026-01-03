@@ -14,25 +14,33 @@ func TestCreateEvent(t *testing.T) {
 	curTime := time.Now()
 
 	validEvent := &entity.Event{
+		OrganizerID: 7,
 		Title:       "test",
 		Cost:        100,
 		DateTime:    curTime.Add(12 * time.Hour),
 		Description: "some thing...",
 	}
 
+	validOrg := &entity.Organization{
+		ID: 7,
+		OwnerID: 5,
+		Name: "my valid Organization",
+	}
+
 	testCases := []struct {
 		name      string
 		userID    int
 		event     *entity.Event
-		setupMock func(m *mockEventStorage)
+		setupMock func(m *mockEventStorage, o *mockOrganizionStorage)
 		wantEvent *entity.Event
 		wantErr   error
 	}{
 		{
-			name:  "valid event",
+			name:  "Valid event",
 			userID: 5,
 			event: validEvent,
-			setupMock: func(m *mockEventStorage) {
+			setupMock: func(m *mockEventStorage, o *mockOrganizionStorage) {
+				o.On("GetByID", validEvent.OrganizerID).Return(validOrg, nil)
 				m.On("Create", mock.Anything).Return(validEvent, nil)
 			},
 			wantEvent: validEvent,
@@ -47,7 +55,7 @@ func TestCreateEvent(t *testing.T) {
 				Description: "some thing...",
 				DateTime:    curTime.Add(12 * time.Hour),
 			},
-			setupMock: func(m *mockEventStorage) {},
+			setupMock: func(m *mockEventStorage, o *mockOrganizionStorage) {},
 			wantErr:   entity.ErrInvalidTitle,
 		},
 		{
@@ -59,18 +67,19 @@ func TestCreateEvent(t *testing.T) {
 				Description: "some thing...",
 				DateTime:    curTime.Add(12 * time.Hour),
 			},
-			setupMock: func(m *mockEventStorage) {},
+			setupMock: func(m *mockEventStorage, o *mockOrganizionStorage) {},
 			wantErr:   entity.ErrInvalidCost,
 		},
-		// {
-		// 	name: "Invalid user request",
-		// 	userID: 7,
-		// 	event: validEvent,
-		// 	setupMock: func(m *mockEventStorage) {
-		// 		m.On("Create", mock.Anything).Return(validEvent, nil)
-		// 	},
-		// 	wantErr: event.ErrInvalidEventCreator,
-		// },
+		{
+			name: "Nonexisting organizaion",
+			userID: 7,
+			event: validEvent,
+			setupMock: func(m *mockEventStorage, o *mockOrganizionStorage) {
+				o.On("GetByID", validEvent.OrganizerID).Return(validOrg, nil)
+				m.On("Create", mock.Anything).Return(validEvent, nil)
+			},
+			wantErr: event.ErrInvalidEventCreator,
+		},
 	}
 
 	for _, tc := range testCases {
@@ -78,7 +87,7 @@ func TestCreateEvent(t *testing.T) {
 			eventStorage := new(mockEventStorage)
 			joinEventStorage := new(mockJoinEventStorage)
 			OrgStorage := new(mockOrganizionStorage)
-			tc.setupMock(eventStorage)
+			tc.setupMock(eventStorage, OrgStorage)
 			service := event.NewService(eventStorage, joinEventStorage,OrgStorage)
 			event, err := service.Create(tc.userID, tc.event)
 

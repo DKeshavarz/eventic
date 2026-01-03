@@ -8,6 +8,16 @@ func (s *service) Create(userID int,event *entity.Event) (*entity.Event, error) 
 	if err := event.Validate(); err != nil {
 		return nil, err
 	}
+
+	eventOrg, err := s.organizationStorage.GetByID(event.OrganizerID)
+	if err != nil {
+		return nil, err
+	}
+	
+	if eventOrg.OwnerID != userID {
+		return nil, ErrInvalidEventCreator
+	}
+
 	newEvent, err := s.eventStorage.Create(event)
 	if err != nil {
 		return nil, err
