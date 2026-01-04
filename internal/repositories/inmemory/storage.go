@@ -2,7 +2,6 @@ package inmemory
 
 import (
 	"sync"
-	"time"
 
 	"github.com/DKeshavarz/eventic/internal/entity"
 	"github.com/DKeshavarz/eventic/pkg/utile"
@@ -41,16 +40,14 @@ func DefaultDB() *DB {
 			Email:    utile.StrPtr("dan@gmail.com"),
 		},
 	}
-	currTime := time.Now()
 	events := map[int]*entity.Event{
 		1: {
-			ID: 1,
+			ID:          1,
 			OrganizerID: 1,
-			Title: "دوره خواب کوالایی",
-			Cost: 1000,
-			DateTime: currTime.Add(72 * time.Hour),
-			Description: 
-			`
+			Title:       "دوره خواب کوالایی",
+			Cost:        1000,
+			DateTime:    nil,
+			Description: `
 			سالانه هزار دانشجو به خاطر کبود خواب فوت می کنند.
 
 			توی این دوره بهت یاد می دیم که چطور به خواب ابدی فرو بری و دیگه لازم نیست نگران هیچ تکلیفی باشی.

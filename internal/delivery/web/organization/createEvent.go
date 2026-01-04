@@ -12,7 +12,7 @@ import (
 type CreateEventRequest struct {
 	Title       string    `json:"title"`
 	Cost        int       `json:"cost"`
-	DateTime    time.Time `json:"datetime"`
+	DateTime    *time.Time `json:"datetime"`
 	Description string    `json:"description"`
 	Location    *string   `json:"location"`
 	PosterPic   *string   `json:"poster_pic"`

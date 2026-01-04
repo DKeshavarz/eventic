@@ -3,6 +3,7 @@ package utile
 import (
 	"os"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -28,3 +29,14 @@ func TestFileExists_Basic(t *testing.T) {
 	res = FileExists(tmpfile.Name())
 	assert.True(t, res)
 }
+
+func TestTimePtr_Basic(t *testing.T) {
+	timeNow := time.Now()
+
+	testTime := timeNow.Add(5 * time.Hour)
+	testTimePtr := TimePtr(testTime)
+
+	assert.Equal(t, testTime, *testTimePtr)
+}
+
+

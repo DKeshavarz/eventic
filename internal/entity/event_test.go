@@ -8,6 +8,8 @@ import (
 )
 
 func TestValidateEvent(t *testing.T) {
+	time := time.Now()
+	curTime := &time
 	testCases := []struct {
 		name        string
 		event       *Event
@@ -20,7 +22,7 @@ func TestValidateEvent(t *testing.T) {
 				OrganizerID: 1,
 				Title:       "Test Event",
 				Cost:        100,
-				DateTime:    time.Now(),
+				DateTime:    curTime,
 				Description: "This is a test event",
 				Location:    nil,
 				PosterPic:   nil,
@@ -35,7 +37,7 @@ func TestValidateEvent(t *testing.T) {
 				OrganizerID: 1,
 				Title:       "Free Event",
 				Cost:        -10,
-				DateTime:    time.Now(),
+				DateTime:    curTime,
 				Description: "This is a free event",
 				Location:    nil,
 				PosterPic:   nil,
@@ -50,7 +52,7 @@ func TestValidateEvent(t *testing.T) {
 				OrganizerID: 1,
 				Title:       "",
 				Cost:        100,
-				DateTime:    time.Now(),
+				DateTime:    curTime,
 				Description: "This is a test event",
 				Location:    nil,
 				PosterPic:   nil,
@@ -65,7 +67,7 @@ func TestValidateEvent(t *testing.T) {
 				OrganizerID: 1,
 				Title:       "Test Event",
 				Cost:        100,
-				DateTime:    time.Now(),
+				DateTime:    curTime,
 				Description: "",
 				Location:    nil,
 				PosterPic:   nil,
@@ -80,7 +82,7 @@ func TestValidateEvent(t *testing.T) {
 				OrganizerID: 1,
 				Title:       "Full Event",
 				Cost:        200,
-				DateTime:    time.Now(),
+				DateTime:    curTime,
 				Description: "This is a complete event",
 				Location:    utile.StrPtr("123 Main St"),
 				PosterPic:   utile.StrPtr("/images/poster.jpg"),

@@ -7,6 +7,7 @@ import (
 	"github.com/DKeshavarz/eventic/internal/entity"
 	"github.com/DKeshavarz/eventic/internal/repositories"
 	"github.com/DKeshavarz/eventic/internal/usecase/event"
+	"github.com/DKeshavarz/eventic/pkg/utile"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -16,14 +17,14 @@ func TestGet(t *testing.T) {
 		ID:          5,
 		Title:       "test",
 		Cost:        100,
-		DateTime:    curTime.Add(12 * time.Hour),
+		DateTime:    utile.TimePtr(curTime.Add(12 * time.Hour)),
 		Description: "some thing...",
 	}
 	event2 := &entity.Event{
 		ID:          7,
 		Title:       "test 2",
 		Cost:        1000,
-		DateTime:    curTime.Add(120 * time.Hour),
+		DateTime:    utile.TimePtr(curTime.Add(120 * time.Hour)),
 		Description: "some thing 2...",
 	}
 

@@ -6,6 +6,7 @@ import (
 
 	"github.com/DKeshavarz/eventic/internal/entity"
 	"github.com/DKeshavarz/eventic/internal/usecase/event"
+	"github.com/DKeshavarz/eventic/pkg/utile"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
@@ -17,7 +18,7 @@ func TestCreateEvent(t *testing.T) {
 		OrganizerID: 7,
 		Title:       "test",
 		Cost:        100,
-		DateTime:    curTime.Add(12 * time.Hour),
+		DateTime:    utile.TimePtr(curTime.Add(12 * time.Hour)),
 		Description: "some thing...",
 	}
 
@@ -53,7 +54,7 @@ func TestCreateEvent(t *testing.T) {
 				Title:       "",
 				Cost:        100,
 				Description: "some thing...",
-				DateTime:    curTime.Add(12 * time.Hour),
+				DateTime:    utile.TimePtr(curTime.Add(12 * time.Hour)),
 			},
 			setupMock: func(m *mockEventStorage, o *mockOrganizionStorage) {},
 			wantErr:   entity.ErrInvalidTitle,
@@ -65,7 +66,7 @@ func TestCreateEvent(t *testing.T) {
 				Title:       "title",
 				Cost:        -50,
 				Description: "some thing...",
-				DateTime:    curTime.Add(12 * time.Hour),
+				DateTime:    utile.TimePtr(curTime.Add(12 * time.Hour)),
 			},
 			setupMock: func(m *mockEventStorage, o *mockOrganizionStorage) {},
 			wantErr:   entity.ErrInvalidCost,

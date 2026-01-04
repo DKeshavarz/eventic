@@ -7,6 +7,7 @@ import (
 	"github.com/DKeshavarz/eventic/internal/entity"
 	"github.com/DKeshavarz/eventic/internal/repositories"
 	"github.com/DKeshavarz/eventic/internal/repositories/inmemory"
+	"github.com/DKeshavarz/eventic/pkg/utile"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -27,7 +28,7 @@ func TestCreateEvent(t *testing.T) {
 		Title: "title",
 		Description: "des",
 		Cost: 100,
-		DateTime: time.Now().Add(time.Hour * 72),
+		DateTime: utile.TimePtr(time.Now().Add(time.Hour * 72)),
 	}
 
 	newEvent, err := eventStorage.Create(event)
@@ -43,7 +44,7 @@ func TestCreateAndGet(t *testing.T){
 		Title: "title",
 		Description: "des",
 		Cost: 100,
-		DateTime: time.Now().Add(time.Hour * 72),
+		DateTime: utile.TimePtr(time.Now().Add(time.Hour * 72)),
 	}
 
 	newEvent, err := eventStorage.Create(event)
@@ -63,7 +64,7 @@ func TestCreateAndGetAll(t *testing.T){
 		Title: "title",
 		Description: "descripton",
 		Cost: 100,
-		DateTime: time.Now().Add(time.Hour * 72),
+		DateTime: utile.TimePtr(time.Now().Add(time.Hour * 72)),
 	}
 	newEvent, err := eventStorage.Create(event1)
 	assert.Nil(t, err)
@@ -73,7 +74,7 @@ func TestCreateAndGetAll(t *testing.T){
 		Title: "title 2",
 		Description: "descripton 2",
 		Cost: 1000,
-		DateTime: time.Now().Add(time.Hour * 2),
+		DateTime: utile.TimePtr(time.Now().Add(time.Hour * 2)),
 	}
 	newEvent, err = eventStorage.Create(event2)
 	assert.Nil(t, err)
