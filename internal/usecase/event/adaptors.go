@@ -24,12 +24,14 @@ type service struct {
 	eventStorage        repositories.Event
 	joinEventStorage    repositories.JoinEvent
 	organizationStorage repositories.Organization
+	userStorage         repositories.User
 }
 
-func NewService(eventStorage repositories.Event, joinEventStorage repositories.JoinEvent, org repositories.Organization) Service {
+func NewService(eventStorage repositories.Event, joinEventStorage repositories.JoinEvent, org repositories.Organization, userStorage repositories.User) Service {
 	return &service{
-		eventStorage:     eventStorage,
-		joinEventStorage: joinEventStorage,
+		eventStorage:        eventStorage,
+		joinEventStorage:    joinEventStorage,
 		organizationStorage: org,
+		userStorage: userStorage,
 	}
 }

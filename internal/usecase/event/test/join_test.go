@@ -67,9 +67,10 @@ func TestJoinEvent(t *testing.T) {
 			eventStorage := new(mockEventStorage)
 			joinEventStorage := new(mockJoinEventStorage)
 			OrgStorage := new(mockOrganizionStorage)
+			userStorage := new(mockUserStorage)
 			tc.setupMock(joinEventStorage)
 
-			service := event.NewService(eventStorage, joinEventStorage, OrgStorage)
+			service := event.NewService(eventStorage, joinEventStorage, OrgStorage, userStorage)
 			
 
 			joinEvent, err := service.Join(tc.joinEvent)
