@@ -11,13 +11,13 @@ import (
 )
 
 type CreateEventRequest struct {
-	Title       string     `json:"title"`
-	Cost        int        `json:"cost"`
+	Title       string    `json:"title"`
+	Cost        int       `json:"cost"`
 	DateTime    *time.Time `json:"datetime"`
-	Description string     `json:"description"`
-	Location    *string    `json:"location"`
-	PosterPic   *string    `json:"poster_pic"`
-	Link        *string    `json:"link"`
+	Description string    `json:"description"`
+	Location    *string   `json:"location"`
+	PosterPic   *string   `json:"poster_pic"`
+	Link        *string   `json:"link"`
 }
 
 type CreateEventResponse struct {
@@ -63,6 +63,7 @@ func (h *Handler) CreateEvent(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, DefaultErr("Can't cast user userID to int"))
 		return
 	}
+
 
 	// Create by uscases
 	if req.PosterPic != nil {

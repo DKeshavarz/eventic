@@ -28,14 +28,4 @@ func RegisterRoutes(group *gin.RouterGroup, h *Handler, accessToken jwt.AccessTo
 }
 
 
-type ErrorResponse struct {
-	Error string `json:"error"`
-	Meta  string `json:"meta,omitempty"`
-}
 
-func DefaultErr(meta string) *ErrorResponse {
-	return &ErrorResponse{
-		Error: "مشکلی پیش آمده",
-		Meta:  meta,
-	}
-}
