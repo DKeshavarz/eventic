@@ -10,10 +10,6 @@ type mockUserStorage struct {
 }
 
 // ------- helpers ----------------
-func strPtr(s string) *string {
-	return &s
-}
-
 func (u *mockUserStorage) GetUserByPhone(phone string) (*entity.User, error) {
 	args := u.Called(phone)
 	return args.Get(0).(*entity.User), args.Error(1)

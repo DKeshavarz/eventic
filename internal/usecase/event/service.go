@@ -26,6 +26,14 @@ func (s *service) Create(userID int,event *entity.Event) (*entity.Event, error) 
 }
 
 func (s *service) Join(joinEvent *entity.JoinEvent) (*entity.JoinEvent, error) {
+	if _, err := s.userStorage.GetByID(joinEvent.UserID); err != nil {
+		return nil, err
+	}
+
+	if _, err := s.eventStorage.GetByID(joinEvent.EventID); err != nil {
+		return nil, err
+	}
+	
 	return s.joinEventStorage.Create(joinEvent)
 }
 
