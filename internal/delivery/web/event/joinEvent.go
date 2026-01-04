@@ -9,8 +9,8 @@ import (
 )
 
 type joinEventResponse struct {
-	UserId  int `json:"user_id"`
-	EventID int `json:"event_id"`
+    UserId  int `json:"user_id" example:"42"`   
+    EventID int `json:"event_id" example:"101"`
 }
 
 // @Router /events/{id}/registrations [post]
@@ -19,7 +19,7 @@ func (h *Handler) CreateEvent(c *gin.Context) {
 	eventID, err := strconv.Atoi(eventIDStr)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, ErrorResponse{
-			Error: "آیدی سازمان نامعتبر است",
+			Error: "آیدی رویداد نامعتبر است",
 			Meta:  err.Error(),
 		})
 	}
@@ -40,6 +40,7 @@ func (h *Handler) CreateEvent(c *gin.Context) {
 		EventID: eventID,
 		UserID:  userID,
 	}
+	
 	newJoinEvent, err := h.eventSerivce.Join(joinEvent)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, DefaultErr(err.Error()))
