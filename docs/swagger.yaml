@@ -133,6 +133,28 @@ definitions:
       event:
         $ref: '#/definitions/entity.Event'
     type: object
+  organization.CreateEventRequest:
+    properties:
+      cost:
+        type: integer
+      datetime:
+        type: string
+      description:
+        type: string
+      link:
+        type: string
+      location:
+        type: string
+      poster_pic:
+        type: string
+      title:
+        type: string
+    type: object
+  organization.CreateEventResponse:
+    properties:
+      created_event:
+        $ref: '#/definitions/entity.Event'
+    type: object
   organization.CreateOrgRequest:
     properties:
       description:
@@ -347,7 +369,44 @@ paths:
       - BearerAuth: []
       summary: Create new organization
       tags:
-      - organization
+      - Organization
+  /organization/{id}/event:
+    post:
+      consumes:
+      - application/json
+      description: A company/organization creates an event, providing title, date,
+        location, etc.
+      parameters:
+      - description: Organization ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Event creation payload
+        in: body
+        name: CreateEventRequest
+        required: true
+        schema:
+          $ref: '#/definitions/organization.CreateEventRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/organization.CreateEventResponse'
+        "400":
+          description: Invalid request or invalid organization ID
+          schema:
+            $ref: '#/definitions/organization.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/organization.ErrorResponse'
+      security:
+      - BearerAuth: []
+      tags:
+      - Organization
   /refresh-token:
     post:
       consumes:

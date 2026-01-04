@@ -212,7 +212,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "organization"
+                    "Organization"
                 ],
                 "summary": "Create new organization",
                 "parameters": [
@@ -235,6 +235,63 @@ const docTemplate = `{
                     },
                     "400": {
                         "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/organization.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/organization.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/organization/{id}/event": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "A company/organization creates an event, providing title, date, location, etc.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Organization"
+                ],
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Organization ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Event creation payload",
+                        "name": "CreateEventRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/organization.CreateEventRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/organization.CreateEventResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request or invalid organization ID",
                         "schema": {
                             "$ref": "#/definitions/organization.ErrorResponse"
                         }
@@ -679,6 +736,40 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "event": {
+                    "$ref": "#/definitions/entity.Event"
+                }
+            }
+        },
+        "organization.CreateEventRequest": {
+            "type": "object",
+            "properties": {
+                "cost": {
+                    "type": "integer"
+                },
+                "datetime": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "link": {
+                    "type": "string"
+                },
+                "location": {
+                    "type": "string"
+                },
+                "poster_pic": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "organization.CreateEventResponse": {
+            "type": "object",
+            "properties": {
+                "created_event": {
                     "$ref": "#/definitions/entity.Event"
                 }
             }

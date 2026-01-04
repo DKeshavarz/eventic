@@ -24,6 +24,7 @@ func RegisterRoutes(group *gin.RouterGroup, h *Handler, accessToken jwt.AccessTo
 	group.Use(middelware.Auth(accessToken))
 
 	group.POST("/", h.Create)
+	group.POST("/:id/event", h.CreateEvent)
 }
 
 
