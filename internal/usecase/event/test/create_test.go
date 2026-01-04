@@ -89,7 +89,8 @@ func TestCreateEvent(t *testing.T) {
 			joinEventStorage := new(mockJoinEventStorage)
 			OrgStorage := new(mockOrganizionStorage)
 			tc.setupMock(eventStorage, OrgStorage)
-			service := event.NewService(eventStorage, joinEventStorage,OrgStorage)
+			userStorage := new(mockUserStorage)
+			service := event.NewService(eventStorage, joinEventStorage,OrgStorage, userStorage)
 			event, err := service.Create(tc.userID, tc.event)
 
 			if tc.wantErr != nil {

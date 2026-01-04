@@ -56,8 +56,9 @@ func TestGetAll(t *testing.T) {
 			OrgStorage := new(mockOrganizionStorage)
 			tc.setupMock(eventStorage)
 			joinEventStorage := new(mockJoinEventStorage)
+			userStorage := new(mockUserStorage)
 
-			service := event.NewService(eventStorage, joinEventStorage, OrgStorage)
+			service := event.NewService(eventStorage, joinEventStorage, OrgStorage, userStorage)
 			events, err := service.GetAll()
 
 			if tc.wantErr != nil {

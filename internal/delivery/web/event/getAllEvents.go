@@ -11,10 +11,6 @@ import (
 type GetAllEventsResponse struct {
 	Events []*entity.Event `json:"events"`
 }
-type ErrorResponse struct {
-	Error string `json:"error"`
-	Meta  string `json:"meta,omitempty"`
-}
 
 // Login        godoc
 // @Summary     Get All Events
@@ -28,7 +24,7 @@ type ErrorResponse struct {
 // @Router      /event/ [get]
 func (h *Handler) GetAllEvents(c *gin.Context) {
 	events, err := h.eventSerivce.GetAll()
-	
+
 	if err != nil {
 		c.JSON(http.StatusInternalServerError,
 			ErrorResponse{

@@ -133,6 +133,15 @@ definitions:
       event:
         $ref: '#/definitions/entity.Event'
     type: object
+  event.joinEventResponse:
+    properties:
+      event_id:
+        example: 101
+        type: integer
+      user_id:
+        example: 42
+        type: integer
+    type: object
   organization.CreateEventRequest:
     properties:
       cost:
@@ -274,6 +283,38 @@ paths:
           schema:
             $ref: '#/definitions/event.ErrorResponse'
       summary: Get a single event by ID
+      tags:
+      - Event
+  /event/{id}/registrations:
+    post:
+      consumes:
+      - application/json
+      description: Adds the current authenticated user as a participant in the specified
+        event.
+      parameters:
+      - description: Event ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Successfully registered
+          schema:
+            $ref: '#/definitions/event.joinEventResponse'
+        "400":
+          description: Invalid event ID
+          schema:
+            $ref: '#/definitions/event.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/event.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Register for an event
       tags:
       - Event
   /login-email:
