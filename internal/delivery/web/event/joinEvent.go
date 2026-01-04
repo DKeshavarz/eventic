@@ -13,8 +13,19 @@ type joinEventResponse struct {
     EventID int `json:"event_id" example:"101"`
 }
 
-// @Router /events/{id}/registrations [post]
-func (h *Handler) CreateEvent(c *gin.Context) {
+// CreateEvent registers the currently authenticated user for a given event
+// @Summary Register for an event
+// @Description Adds the current authenticated user as a participant in the specified event.
+// @Tags Event 
+// @Accept json
+// @Produce json
+// @Param id path int true "Event ID"
+// @Security    BearerAuth
+// @Success 201 {object} joinEventResponse "Successfully registered"
+// @Failure 400 {object} ErrorResponse "Invalid event ID"
+// @Failure 500 {object} ErrorResponse "Internal server error"
+// @Router /event/{id}/registrations [post]
+func (h *Handler) JoinEvent(c *gin.Context) {
 	eventIDStr := c.Param("id")
 	eventID, err := strconv.Atoi(eventIDStr)
 	if err != nil {
@@ -40,7 +51,7 @@ func (h *Handler) CreateEvent(c *gin.Context) {
 		EventID: eventID,
 		UserID:  userID,
 	}
-	
+
 	newJoinEvent, err := h.eventSerivce.Join(joinEvent)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, DefaultErr(err.Error()))

@@ -105,6 +105,55 @@ const docTemplate = `{
                 }
             }
         },
+        "/event/{id}/registrations": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Adds the current authenticated user as a participant in the specified event.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Event"
+                ],
+                "summary": "Register for an event",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Event ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Successfully registered",
+                        "schema": {
+                            "$ref": "#/definitions/event.joinEventResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid event ID",
+                        "schema": {
+                            "$ref": "#/definitions/event.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/event.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/login-email": {
             "post": {
                 "description": "Login a user with Eamil to app and generate a hwt token and a jwt refresh token",
@@ -737,6 +786,19 @@ const docTemplate = `{
             "properties": {
                 "event": {
                     "$ref": "#/definitions/entity.Event"
+                }
+            }
+        },
+        "event.joinEventResponse": {
+            "type": "object",
+            "properties": {
+                "event_id": {
+                    "type": "integer",
+                    "example": 101
+                },
+                "user_id": {
+                    "type": "integer",
+                    "example": 42
                 }
             }
         },
