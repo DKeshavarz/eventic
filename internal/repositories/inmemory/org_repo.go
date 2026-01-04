@@ -35,3 +35,13 @@ func (s *OrgStorage) Create(org *entity.Organization) (*entity.Organization, err
 
 	return org, nil
 }
+
+func (s *OrgStorage) GetByOwnerID(id int) ([]*entity.Organization, error) {
+	organizations := make([]*entity.Organization,0)
+	for _, value := range s.db.organizations {
+		if value.OwnerID == id {
+			organizations = append(organizations, value)
+		}
+	}
+	return organizations, nil
+}

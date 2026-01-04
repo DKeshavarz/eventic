@@ -6,6 +6,7 @@ import (
 
 	"github.com/DKeshavarz/eventic/internal/entity"
 	"github.com/DKeshavarz/eventic/internal/usecase/event"
+	"github.com/DKeshavarz/eventic/pkg/utile"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -14,26 +15,26 @@ func TestGetAll(t *testing.T) {
 	event1 := &entity.Event{
 		Title:       "test",
 		Cost:        100,
-		DateTime:    curTime.Add(12 * time.Hour),
+		DateTime:    utile.TimePtr(curTime.Add(12 * time.Hour)),
 		Description: "some thing...",
 	}
 	event2 := &entity.Event{
 		Title:       "test 2",
 		Cost:        1000,
-		DateTime:    curTime.Add(120 * time.Hour),
+		DateTime:    utile.TimePtr(curTime.Add(120 * time.Hour)),
 		Description: "some thing 2...",
 	}
 	events := []*entity.Event{event1, event2}
 
 	testCases := []struct {
 		tag       string
-		setupMock func(m *eventStorage)
+		setupMock func(m *mockEventStorage)
 		wantEvent []*entity.Event
 		wantErr   error
 	}{
 		{
 			tag: "Valid GetAll with nothing",
-			setupMock: func(m *eventStorage) {
+			setupMock: func(m *mockEventStorage) {
 				m.On("GetAll").Return([]*entity.Event{}, nil)
 			},
 			wantEvent: []*entity.Event{},
@@ -41,7 +42,7 @@ func TestGetAll(t *testing.T) {
 		},
 		{
 			tag: "Valid GetAll with somthig",
-			setupMock: func(m *eventStorage) {
+			setupMock: func(m *mockEventStorage) {
 				m.On("GetAll").Return(events, nil)
 			},
 			wantEvent: events,
@@ -51,11 +52,12 @@ func TestGetAll(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.tag, func(t *testing.T) {
-			eventStorage := new(eventStorage)
+			eventStorage := new(mockEventStorage)
+			OrgStorage := new(mockOrganizionStorage)
 			tc.setupMock(eventStorage)
-			joinEventStorage := new(joinEventStorage)
+			joinEventStorage := new(mockJoinEventStorage)
 
-			service := event.NewService(eventStorage, joinEventStorage)
+			service := event.NewService(eventStorage, joinEventStorage, OrgStorage)
 			events, err := service.GetAll()
 
 			if tc.wantErr != nil {

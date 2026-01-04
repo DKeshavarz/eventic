@@ -29,7 +29,7 @@ type CreateOrgResponse struct {
 // CreateOrganization godoc
 // @Summary Create new organization
 // @Description Creates a new organization for the authenticated user
-// @Tags organization
+// @Tags Organization
 // @Accept json
 // @Produce json
 // @Param organization body CreateOrgRequest true "Organization data"
@@ -60,9 +60,11 @@ func (h *Handler) Create(c *gin.Context) {
 	}
 
 	// Create by uscases
-	if exsit := utile.FileExists(*req.LogoPic); !exsit {
-		c.JSON(http.StatusBadRequest, DefaultErr("files doesnt exist"))
-		return
+	if req.LogoPic != nil {
+		if exsit := utile.FileExists(*req.LogoPic); !exsit {
+			c.JSON(http.StatusBadRequest, DefaultErr("files doesnt exist"))
+			return
+		}
 	}
 
 	org, err := h.orgSevice.Create(&entity.Organization{

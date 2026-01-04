@@ -1,6 +1,9 @@
 package utile
 
-import "os"
+import (
+	"os"
+	"time"
+)
 
 func StrPtr(s string) *string {
 	return &s
@@ -12,4 +15,8 @@ func FileExists(filename string) bool {
 		return false
 	}
 	return !info.IsDir()
+}
+
+func TimePtr(time time.Time) *time.Time {
+	return &time
 }

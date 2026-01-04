@@ -8,25 +8,28 @@ import (
 )
 
 type Service interface {
-	Create(event *entity.Event) (*entity.Event, error)
+	Create(userID int, event *entity.Event) (*entity.Event, error)
 	Join(joinEvent *entity.JoinEvent) (*entity.JoinEvent, error)
-	GetAll()([]*entity.Event, error)
-	Get(id int)(*entity.Event, error)
+	GetAll() ([]*entity.Event, error)
+	Get(id int) (*entity.Event, error)
 }
 
 var (
-	ErrInvalidUser  = errors.New("invalid user")
-	ErrInvalidEvent = errors.New("invalid event")
+	ErrInvalidUser         = errors.New("invalid user")
+	ErrInvalidEvent        = errors.New("invalid event")
+	ErrInvalidEventCreator = errors.New("This user can't create eve't in this organizaion")
 )
 
 type service struct {
-	eventStorage     repositories.Event
-	joinEventStorage repositories.JoinEvent
+	eventStorage        repositories.Event
+	joinEventStorage    repositories.JoinEvent
+	organizationStorage repositories.Organization
 }
 
-func NewService(eventStorage repositories.Event, joinEventStorage repositories.JoinEvent) Service {
+func NewService(eventStorage repositories.Event, joinEventStorage repositories.JoinEvent, org repositories.Organization) Service {
 	return &service{
 		eventStorage:     eventStorage,
 		joinEventStorage: joinEventStorage,
+		organizationStorage: org,
 	}
 }

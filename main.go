@@ -25,7 +25,7 @@ func main() {
 
 	userSevice := user.NewSevice(userStorage)
 	authService := auth.New(cache, sender)
-	eventService := event.NewService(eventStorage, joinEventStorage)
+	eventService := event.NewService(eventStorage, joinEventStorage, orgStorage)
 	orgSevice := organization.NewService(orgStorage)
 
 	delivery.Start(cfg.Delivery, userSevice, authService, eventService, orgSevice)

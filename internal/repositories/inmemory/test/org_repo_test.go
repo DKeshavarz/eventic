@@ -52,3 +52,39 @@ func TestCreateAndGetOrg(t *testing.T){
 	assert.Nil(t, err)
 	assert.Equal(t, storeorg, org)
 }
+
+func TestOrgGetByOwnerID(t *testing.T) {
+	db := inmemory.NewDB()
+	orgStorage := inmemory.NewOrgStorage(db)
+
+	data := make([]*entity.Organization,0)
+
+	organizations, err := orgStorage.GetByOwnerID(12)
+	assert.Nil(t, err)
+	assert.ElementsMatch(t, data, organizations)
+}
+
+func TestOrgGetByOwnerIDWithData(t *testing.T) {
+	db := inmemory.NewDB()
+	orgStorage := inmemory.NewOrgStorage(db)
+
+	data := []*entity.Organization{
+		{OwnerID: 5},
+		{OwnerID: 5},
+		{OwnerID: 5},
+		{OwnerID: 2},
+	}
+	for i := range data {
+		new, err := orgStorage.Create(data[i])
+		assert.Nil(t, err)
+		assert.Equal(t, new, data[i])
+	}
+	
+	organizations, err := orgStorage.GetByOwnerID(5)
+	assert.Nil(t, err)
+	assert.ElementsMatch(t, organizations, data[:3])
+
+	organizations, err = orgStorage.GetByOwnerID(2)
+	assert.Nil(t, err)
+	assert.ElementsMatch(t, organizations, data[3:])
+}

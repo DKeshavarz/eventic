@@ -132,3 +132,8 @@ func (m *organizationStorage) GetByID(id int) (*entity.Organization, error) {
 	args := m.Called(id)
 	return args.Get(0).(*entity.Organization), args.Error(1)
 }
+
+func (m *organizationStorage) GetByOwnerID(id int) ([]*entity.Organization, error) {
+	args := m.Called(id)
+	return args.Get(0).([]*entity.Organization), args.Error(1)
+}

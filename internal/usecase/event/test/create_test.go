@@ -6,86 +6,91 @@ import (
 
 	"github.com/DKeshavarz/eventic/internal/entity"
 	"github.com/DKeshavarz/eventic/internal/usecase/event"
+	"github.com/DKeshavarz/eventic/pkg/utile"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
 
-type eventStorage struct {
-	mock.Mock
-}
-
 func TestCreateEvent(t *testing.T) {
 	curTime := time.Now()
+
+	validEvent := &entity.Event{
+		OrganizerID: 7,
+		Title:       "test",
+		Cost:        100,
+		DateTime:    utile.TimePtr(curTime.Add(12 * time.Hour)),
+		Description: "some thing...",
+	}
+
+	validOrg := &entity.Organization{
+		ID: 7,
+		OwnerID: 5,
+		Name: "my valid Organization",
+	}
+
 	testCases := []struct {
 		name      string
+		userID    int
 		event     *entity.Event
-		setupMock func(m *eventStorage)
+		setupMock func(m *mockEventStorage, o *mockOrganizionStorage)
 		wantEvent *entity.Event
 		wantErr   error
 	}{
 		{
-			name: "valid event",
+			name:  "Valid event",
+			userID: 5,
+			event: validEvent,
+			setupMock: func(m *mockEventStorage, o *mockOrganizionStorage) {
+				o.On("GetByID", validEvent.OrganizerID).Return(validOrg, nil)
+				m.On("Create", mock.Anything).Return(validEvent, nil)
+			},
+			wantEvent: validEvent,
+			wantErr:   nil,
+		},
+		{
+			name: "Lost title",
+			userID: 5,
 			event: &entity.Event{
-				Title:    "test",
-				Cost:     100,
-				DateTime: curTime.Add(12 * time.Hour),
-				Description: "some thing...",
-			},
-			setupMock: func(m *eventStorage) {
-				m.On("Create", mock.Anything).Return(&entity.Event{
-					ID:          1,
-					Title:       "test",
-					Cost:        100,
-					DateTime:    curTime.Add(12 * time.Hour),
-					Description: "some thing...",
-				}, nil)
-			},
-			wantEvent: &entity.Event{
-				ID:          1,
-				Title:       "test",
+				Title:       "",
 				Cost:        100,
-				DateTime:    curTime.Add(12 * time.Hour),
 				Description: "some thing...",
+				DateTime:    utile.TimePtr(curTime.Add(12 * time.Hour)),
 			},
-			wantErr: nil,
+			setupMock: func(m *mockEventStorage, o *mockOrganizionStorage) {},
+			wantErr:   entity.ErrInvalidTitle,
 		},
 		{
-			name: "invalid event - lost title",
+			name: "Negetive cost",
+			userID: 5,
 			event: &entity.Event{
-				Title:    "",
-				Cost:     100,
+				Title:       "title",
+				Cost:        -50,
 				Description: "some thing...",
-				DateTime: curTime.Add(12 * time.Hour),
+				DateTime:    utile.TimePtr(curTime.Add(12 * time.Hour)),
 			},
-			setupMock: func(m *eventStorage) {
-				m.On("Create", mock.Anything).Return(&entity.Event{}, nil)
-			},
-			wantEvent: &entity.Event{},
-			wantErr: entity.ErrInvalidTitle,
+			setupMock: func(m *mockEventStorage, o *mockOrganizionStorage) {},
+			wantErr:   entity.ErrInvalidCost,
 		},
 		{
-			name: "invalid event - negetive cost",
-			event: &entity.Event{
-				Title:    "title",
-				Cost:     -50,
-				Description: "some thing...",
-				DateTime: curTime.Add(12 * time.Hour),
+			name: "Nonexisting organizaion",
+			userID: 7,
+			event: validEvent,
+			setupMock: func(m *mockEventStorage, o *mockOrganizionStorage) {
+				o.On("GetByID", validEvent.OrganizerID).Return(validOrg, nil)
+				m.On("Create", mock.Anything).Return(validEvent, nil)
 			},
-			setupMock: func(m *eventStorage) {
-				m.On("Create", mock.Anything).Return(&entity.Event{}, nil)
-			},
-			wantEvent: &entity.Event{},
-			wantErr: entity.ErrInvalidCost,
+			wantErr: event.ErrInvalidEventCreator,
 		},
 	}
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			eventStorage := &eventStorage{}
-			joinEventStorage := new(joinEventStorage)
-			tc.setupMock(eventStorage)
-			service := event.NewService(eventStorage, joinEventStorage)
-			event, err := service.Create(tc.event)
+			eventStorage := new(mockEventStorage)
+			joinEventStorage := new(mockJoinEventStorage)
+			OrgStorage := new(mockOrganizionStorage)
+			tc.setupMock(eventStorage, OrgStorage)
+			service := event.NewService(eventStorage, joinEventStorage,OrgStorage)
+			event, err := service.Create(tc.userID, tc.event)
 
 			if tc.wantErr != nil {
 				assert.Equal(t, tc.wantErr, err)
@@ -95,24 +100,3 @@ func TestCreateEvent(t *testing.T) {
 		})
 	}
 }
-
-
-// -------------- helpers ----------------------
-func (e *eventStorage) Create(event *entity.Event) (*entity.Event, error) {
-	args := e.Called(event)
-	return args.Get(0).(*entity.Event), args.Error(1)
-}
-
-func (e *eventStorage) GetByID(id int) (*entity.Event, error) {
-	args := e.Called(id)
-	return args.Get(0).(*entity.Event), args.Error(1)
-}
-func (e *eventStorage) GetAll() ([]*entity.Event, error) {
-	args := e.Called()
-	return args.Get(0).([]*entity.Event), args.Error(1)
-}
-func (e *joinEventStorage) GetByUserID(id int) ([]*entity.JoinEvent, error) {
-	args := e.Called(id)
-	return args.Get(0).([]*entity.JoinEvent), args.Error(1)
-}
-
