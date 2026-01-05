@@ -13,7 +13,7 @@ type getOrganisationResponse struct {
 	Organisations []*entity.Organization
 }
 
-// @Router /users/{id}/organisation [get]
+// @Router /users/{id}/organisations [get]
 func (h *Handler) getOrganisations(c *gin.Context) {
 	userIDStr := c.Param("id")
 	userID, err := strconv.Atoi(userIDStr)
