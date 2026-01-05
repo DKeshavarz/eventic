@@ -16,7 +16,7 @@ func NewHandler(userSvc user.Service) *Handler {
 }
 
 func RegisterRoutes(group *gin.RouterGroup, h *Handler){
-	group.GET("/:id/organisations")
+	group.GET("/:id/organisations", h.getOrganisations)
 }
 
 type ErrorResponse struct {
