@@ -40,7 +40,13 @@ func (m *MockUserService) Signup(user *entity.User) (*entity.User, error) {
 	}
 	return args.Get(0).(*entity.User), args.Error(1)
 }
-
+func (m *MockUserService) GetCompanies(id int) ([]*entity.Organization, error) {
+	args := m.Called(id)
+	if args.Get(0) == nil {
+		return nil, args.Error(1)
+	}
+	return args.Get(0).([]*entity.Organization), args.Error(1)
+}
 // ------------------------- JWT service ----------------------------
 type MockJWTService struct {
 	mock.Mock

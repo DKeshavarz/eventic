@@ -50,3 +50,8 @@ func (s *service) Signup(user *entity.User) (*entity.User, error) {
 
  	return s.userStorage.Create(user)
 }
+
+func (s *service) GetCompanies(id int) ([]*entity.Organization, error) {
+	//TODO
+	return nil, nil
+}
