@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/DKeshavarz/eventic/internal/entity"
-	"github.com/DKeshavarz/eventic/internal/usecase/user"
 	"github.com/DKeshavarz/eventic/pkg/utile"
 	"github.com/stretchr/testify/assert"
 )
@@ -27,25 +26,21 @@ func TestSignup(t *testing.T) {
 			wantErr: entity.ErrWeakPassword,
 		},
 		{
-			tag:       "Valid",
-			user: &entity.User{Username: "Gooduser", Password: "pass12345", Email: utile.StrPtr("dan@gmail.com") },
+			tag:  "Valid",
+			user: &entity.User{Username: "Gooduser", Password: "pass12345", Email: utile.StrPtr("dan@gmail.com")},
 			setupMock: func(m *mockUserStorage) {
 				m.On("Create", &entity.User{Username: "Gooduser", Password: "pass12345", Email: utile.StrPtr("dan@gmail.com")}).Return(
-					&entity.User{ID: 1,Username: "Gooduser", Password: "pass12345", Email: utile.StrPtr("dan@gmail.com")},
+					&entity.User{ID: 1, Username: "Gooduser", Password: "pass12345", Email: utile.StrPtr("dan@gmail.com")},
 					nil)
 			},
-			wantErr: nil,
-			wantUser: &entity.User{ID: 1,Username: "Gooduser", Password: "pass12345", Email: utile.StrPtr("dan@gmail.com")},
+			wantErr:  nil,
+			wantUser: &entity.User{ID: 1, Username: "Gooduser", Password: "pass12345", Email: utile.StrPtr("dan@gmail.com")},
 		},
 	}
 
 	for _, tc := range tests {
 		t.Run(tc.tag, func(t *testing.T) {
-			userStorage := new(mockUserStorage)
-			orgStorage := new(mockOrgStorage)
-			tc.setupMock(userStorage)
-
-			service := user.NewSevice(userStorage, orgStorage)
+			service := setupTestSetvice(tc.setupMock)
 			user, err := service.Signup(tc.user)
 
 			if tc.wantErr != nil {

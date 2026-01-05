@@ -49,6 +49,7 @@ func (h *Handler) CreateEvent(c *gin.Context) {
 			Error: "آیدی سازمان نامعتبر است",
 			Meta:  err.Error(),
 		})
+		return
 	}
 
 	// Get User ID

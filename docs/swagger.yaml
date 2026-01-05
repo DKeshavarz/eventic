@@ -114,6 +114,23 @@ definitions:
       title:
         type: string
     type: object
+  entity.Organization:
+    properties:
+      description:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      logo_pic:
+        type: string
+      name:
+        type: string
+      organizer_id:
+        type: integer
+      phone:
+        type: string
+    type: object
   event.ErrorResponse:
     properties:
       error:
@@ -218,6 +235,22 @@ definitions:
       url:
         example: http://localhost:8080/uploads/image123.png
         type: string
+    type: object
+  user.ErrorResponse:
+    properties:
+      error:
+        type: string
+      meta:
+        type: string
+    type: object
+  user.getOrganisationResponse:
+    properties:
+      organisations:
+        items:
+          $ref: '#/definitions/entity.Organization'
+        type: array
+      userID:
+        type: integer
     type: object
 info:
   contact:
@@ -595,6 +628,36 @@ paths:
       summary: Upload an image
       tags:
       - files
+  /users/{id}/organisations:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves all organisations/companies that the specified user is
+        a member of.
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of organisations the user belongs to
+          schema:
+            $ref: '#/definitions/user.getOrganisationResponse'
+        "400":
+          description: Invalid user ID
+          schema:
+            $ref: '#/definitions/user.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/user.ErrorResponse'
+      summary: Get user's organisations
+      tags:
+      - Users
 securityDefinitions:
   BearerAuth:
     description: 'Type `Bearer ` followed by your JWT token. example: "Bearer abcde12345"'

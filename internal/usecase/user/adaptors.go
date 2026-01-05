@@ -12,6 +12,7 @@ type Service interface {
 	LoginWithPhone(phone, password string) (*entity.User, error)
 	GetByID(id int) (*entity.User, error)
 	Signup(*entity.User) (*entity.User, error)
+	GetCompanies(id int) ([]*entity.Organization, error)
 }
 
 var (

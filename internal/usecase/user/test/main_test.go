@@ -4,11 +4,21 @@ import (
 	"testing"
 
 	"github.com/DKeshavarz/eventic/internal/entity"
+	"github.com/DKeshavarz/eventic/internal/usecase/user"
 	"github.com/stretchr/testify/mock"
 )
 
 func TestMain(m *testing.M) {
 	m.Run()
+}
+
+func setupTestSetvice(setUpMock func(m *mockUserStorage)) user.Service {
+	userStorage := new(mockUserStorage)
+	orgStorage := new(mockOrgStorage)
+
+	setUpMock(userStorage)
+
+	return  user.NewSevice(userStorage, orgStorage)
 }
 
 // ---------------------------------------------------------
@@ -33,6 +43,9 @@ func (u *mockUserStorage) Create(user *entity.User) (*entity.User, error) {
 
 func (u *mockUserStorage) GetByID(id int) (*entity.User, error) {
 	args := u.Called(id)
+	if args.Error(1) != nil {
+		return nil, args.Error(1)
+	}
 	return args.Get(0).(*entity.User), args.Error(1)
 }
 

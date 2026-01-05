@@ -578,6 +578,50 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/users/{id}/organisations": {
+            "get": {
+                "description": "Retrieves all organisations/companies that the specified user is a member of.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get user's organisations",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of organisations the user belongs to",
+                        "schema": {
+                            "$ref": "#/definitions/user.getOrganisationResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid user ID",
+                        "schema": {
+                            "$ref": "#/definitions/user.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/user.ErrorResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -759,6 +803,32 @@ const docTemplate = `{
                 }
             }
         },
+        "entity.Organization": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "logo_pic": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "organizer_id": {
+                    "type": "integer"
+                },
+                "phone": {
+                    "type": "string"
+                }
+            }
+        },
         "event.ErrorResponse": {
             "type": "object",
             "properties": {
@@ -911,6 +981,31 @@ const docTemplate = `{
                 "url": {
                     "type": "string",
                     "example": "http://localhost:8080/uploads/image123.png"
+                }
+            }
+        },
+        "user.ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string"
+                },
+                "meta": {
+                    "type": "string"
+                }
+            }
+        },
+        "user.getOrganisationResponse": {
+            "type": "object",
+            "properties": {
+                "organisations": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/entity.Organization"
+                    }
+                },
+                "userID": {
+                    "type": "integer"
                 }
             }
         }
