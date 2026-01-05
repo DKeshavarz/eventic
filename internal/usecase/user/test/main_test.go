@@ -4,11 +4,21 @@ import (
 	"testing"
 
 	"github.com/DKeshavarz/eventic/internal/entity"
+	"github.com/DKeshavarz/eventic/internal/usecase/user"
 	"github.com/stretchr/testify/mock"
 )
 
 func TestMain(m *testing.M) {
 	m.Run()
+}
+
+func setupTestSetvice(setUpMock func(m *mockUserStorage)) user.Service {
+	userStorage := new(mockUserStorage)
+	orgStorage := new(mockOrgStorage)
+
+	setUpMock(userStorage)
+
+	return  user.NewSevice(userStorage, orgStorage)
 }
 
 // ---------------------------------------------------------

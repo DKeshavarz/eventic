@@ -102,12 +102,8 @@ func TestLoginWithPhone(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			userStorage := new(mockUserStorage)
-			tc.setupMock(userStorage)
-			orgStorage := new(mockOrgStorage)
-			guest := user.NewSevice(userStorage, orgStorage)
-
-			user, err := guest.LoginWithPhone(tc.phone, tc.password)
+			service := setupTestSetvice(tc.setupMock)
+			user, err := service.LoginWithPhone(tc.phone, tc.password)
 
 			if tc.wantErr != nil {
 				assert.Equal(t, tc.wantErr, err)
