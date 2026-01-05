@@ -23,7 +23,7 @@ func main() {
 	joinEventStorage := inmemory.NewJoinEventStorage(db)
 	orgStorage := inmemory.NewOrgStorage(db)
 
-	userSevice := user.NewSevice(userStorage)
+	userSevice := user.NewSevice(userStorage, orgStorage)
 	authService := auth.New(cache, sender)
 	eventService := event.NewService(eventStorage, joinEventStorage, orgStorage, userStorage)
 	orgSevice := organization.NewService(orgStorage)

@@ -5,6 +5,7 @@ import (
 
 	"github.com/DKeshavarz/eventic/internal/entity"
 	"github.com/DKeshavarz/eventic/internal/usecase/user"
+	"github.com/DKeshavarz/eventic/pkg/utile"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -24,14 +25,14 @@ func TestLoginWithPhone(t *testing.T) {
 			setupMock: func(m *mockUserStorage) {
 				m.On("GetUserByPhone", "09123456789").Return(&entity.User{
 					ID:       1,
-					Phone:    strPtr("09123456789"),
+					Phone:    utile.StrPtr("09123456789"),
 					Password: "123456",
 				}, nil)
 			},
 			wantErr: nil,
 			wantUser: &entity.User{
 				ID:       1,
-				Phone:    strPtr("09123456789"),
+				Phone:    utile.StrPtr("09123456789"),
 				Password: "123456",
 			},
 		},
@@ -62,14 +63,14 @@ func TestLoginWithPhone(t *testing.T) {
 			setupMock: func(m *mockUserStorage) {
 				m.On("GetUserByPhone", "09188119090").Return(&entity.User{
 					ID:       2,
-					Phone:    strPtr("09188119090"),
+					Phone:    utile.StrPtr("09188119090"),
 					Password: "1111",
 				}, nil)
 			},
 			wantErr: nil,
 			wantUser: &entity.User{
 				ID:       2,
-				Phone:    strPtr("09188119090"),
+				Phone:    utile.StrPtr("09188119090"),
 				Password: "1111",
 			},
 		},
@@ -89,7 +90,7 @@ func TestLoginWithPhone(t *testing.T) {
 			setupMock: func(m *mockUserStorage) {
 				m.On("GetUserByPhone", "09188119091").Return(&entity.User{
 					ID:       2,
-					Phone:    strPtr("09188119091"),
+					Phone:    utile.StrPtr("09188119091"),
 					Password: "2222",
 				}, nil)
 			},
@@ -103,8 +104,8 @@ func TestLoginWithPhone(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			userStorage := new(mockUserStorage)
 			tc.setupMock(userStorage)
-
-			guest := user.NewSevice(userStorage)
+			orgStorage := new(mockOrgStorage)
+			guest := user.NewSevice(userStorage, orgStorage)
 
 			user, err := guest.LoginWithPhone(tc.phone, tc.password)
 

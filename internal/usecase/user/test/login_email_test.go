@@ -5,6 +5,7 @@ import (
 
 	"github.com/DKeshavarz/eventic/internal/entity"
 	"github.com/DKeshavarz/eventic/internal/usecase/user"
+	"github.com/DKeshavarz/eventic/pkg/utile"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -18,26 +19,26 @@ func TestLoginWithEmail(t *testing.T) {
 		wantUser  *entity.User
 	}{
 		{
-			name: "valid email and password",
-			email: "danny@gmail.com",
+			name:     "valid email and password",
+			email:    "danny@gmail.com",
 			password: "1234",
 			setupMock: func(m *mockUserStorage) {
 				m.On("GetUserByEmail", "danny@gmail.com").Return(&entity.User{
 					ID:       1,
-					Email:    strPtr("danny@gmail.com"),
+					Email:    utile.StrPtr("danny@gmail.com"),
 					Password: "1234",
 				}, nil)
 			},
-			wantErr:  nil,
+			wantErr: nil,
 			wantUser: &entity.User{
 				ID:       1,
-				Email:    strPtr("danny@gmail.com"),
+				Email:    utile.StrPtr("danny@gmail.com"),
 				Password: "1234",
 			},
 		},
 		{
-			name: "invalid email",
-			email: "dann.y@gmail.com",
+			name:     "invalid email",
+			email:    "dann.y@gmail.com",
 			password: "1234",
 			setupMock: func(m *mockUserStorage) {
 				m.On("GetUserByEmail", "danny").Return(nil, nil)
@@ -46,13 +47,13 @@ func TestLoginWithEmail(t *testing.T) {
 			wantUser: nil,
 		},
 		{
-			name: "invalid password",
-			email: "danny@gmail.com",
+			name:     "invalid password",
+			email:    "danny@gmail.com",
 			password: "1234",
 			setupMock: func(m *mockUserStorage) {
 				m.On("GetUserByEmail", "danny@gmail.com").Return(&entity.User{
 					ID:       1,
-					Email:    strPtr("danny@gmail.com"),
+					Email:    utile.StrPtr("danny@gmail.com"),
 					Password: "1111",
 				}, nil)
 			},
@@ -60,8 +61,8 @@ func TestLoginWithEmail(t *testing.T) {
 			wantUser: nil,
 		},
 		{
-			name: "not found user",
-			email: "danny@gmail.com",
+			name:     "not found user",
+			email:    "danny@gmail.com",
 			password: "1234",
 			setupMock: func(m *mockUserStorage) {
 				m.On("GetUserByEmail", "danny@gmail.com").Return(&entity.User{},
@@ -77,8 +78,8 @@ func TestLoginWithEmail(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			userStorage := new(mockUserStorage)
 			tc.setupMock(userStorage)
-
-			guest := user.NewSevice(userStorage)
+			orgStorage := new(mockOrgStorage)
+			guest := user.NewSevice(userStorage, orgStorage)
 
 			user, err := guest.LoginWithEmail(tc.email, tc.password)
 

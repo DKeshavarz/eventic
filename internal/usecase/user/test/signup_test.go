@@ -42,9 +42,10 @@ func TestSignup(t *testing.T) {
 	for _, tc := range tests {
 		t.Run(tc.tag, func(t *testing.T) {
 			userStorage := new(mockUserStorage)
+			orgStorage := new(mockOrgStorage)
 			tc.setupMock(userStorage)
 
-			service := user.NewSevice(userStorage)
+			service := user.NewSevice(userStorage, orgStorage)
 			user, err := service.Signup(tc.user)
 
 			if tc.wantErr != nil {

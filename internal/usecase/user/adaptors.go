@@ -23,10 +23,12 @@ var (
 
 type service struct {
 	userStorage repositories.User
+	orgStorage repositories.Organization
 }
 
-func NewSevice(userStorage repositories.User) Service {
+func NewSevice(userStorage repositories.User, orgStorage repositories.Organization) Service {
 	return &service{
 		userStorage: userStorage,
+		orgStorage: orgStorage,
 	}
 }
