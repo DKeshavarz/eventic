@@ -48,10 +48,13 @@ func (s *service) Signup(user *entity.User) (*entity.User, error) {
 		return nil, err
 	}
 
- 	return s.userStorage.Create(user)
+	return s.userStorage.Create(user)
 }
 
-func (s *service) GetCompanies(id int) ([]*entity.Organization, error) {
-	//TODO
-	return nil, nil
+func (s *service) GetCompanies(id int) (organizations []*entity.Organization, err error) {
+	if _, err := s.userStorage.GetByID(id); err != nil {
+		return nil, err
+	}
+
+	return s.orgStorage.GetByOwnerID(id)
 }

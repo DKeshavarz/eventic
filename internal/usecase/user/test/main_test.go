@@ -43,6 +43,9 @@ func (u *mockUserStorage) Create(user *entity.User) (*entity.User, error) {
 
 func (u *mockUserStorage) GetByID(id int) (*entity.User, error) {
 	args := u.Called(id)
+	if args.Error(1) != nil {
+		return nil, args.Error(1)
+	}
 	return args.Get(0).(*entity.User), args.Error(1)
 }
 
