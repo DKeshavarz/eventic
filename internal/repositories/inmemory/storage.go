@@ -56,6 +56,49 @@ func DefaultDB() *DB {
 			توی این دوره بهت یاد می دیم که چطور به خواب ابدی فرو بری و دیگه لازم نیست نگران هیچ تکلیفی باشی.
 			`,
 			Location: utile.StrPtr("سلف مرکزی"),
+			PosterPic: utile.StrPtr("https://www.wallmonkeys.com/cdn/shop/products/52322054-LRG_530x.jpg?v=1578661866"),
+		},
+		2: {
+			ID: 2,
+			OrganizerID: 1,
+			Title: "دوره خواب کوالایی",
+			Cost: 2000,
+			DateTime: currTime.Add(72 * time.Hour),
+			Description:
+			`
+			سالانه هزار دانشجو به خاطر کبود خواب فوت می کنند.
+
+			توی این دوره بهت یاد می دیم که چطور به خواب ابدی فرو بری و دیگه لازم نیست نگران هیچ تکلیفی باشی.
+			`,
+			Location: utile.StrPtr("Hamedan"),
+		},
+		3: {
+			ID: 3,
+			OrganizerID: 1,
+			Title: "دوره خواب کوالایی",
+			Cost: 3000,
+			DateTime: currTime.Add(72 * time.Hour),
+			Description:
+			`
+			سالانه هزار دانشجو به خاطر کبود خواب فوت می کنند.
+
+			توی این دوره بهت یاد می دیم که چطور به خواب ابدی فرو بری و دیگه لازم نیست نگران هیچ تکلیفی باشی.
+			`,
+			Location: utile.StrPtr("خوابگاه غدیر "),
+		},
+		4: {
+			ID: 4,
+			OrganizerID: 1,
+			Title: "دوره خواب کوالایی",
+			Cost: 4000,
+			DateTime: currTime.Add(72 * time.Hour),
+			Description:
+			`
+			سالانه هزار دانشجو به خاطر کبود خواب فوت می کنند.
+
+			توی این دوره بهت یاد می دیم که چطور به خواب ابدی فرو بری و دیگه لازم نیست نگران هیچ تکلیفی باشی.
+			`,
+			Location: utile.StrPtr("خوابگاه غدیر "),
 		},
 	}
 	organizations := make(map[int]*entity.Organization)
